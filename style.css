@@ -1,18 +1,22 @@
+/* Basic Reset & Font */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: #1a1a1a; /* Dark background */
+    color: #e0e0e0; /* Light text color */
+    line-height: 1.6;
 }
 
+/* Header */
 header {
-    background-color: #333;
+    background-color: #000; /* Pure black header */
     color: #fff;
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
 }
 
 .header-left {
@@ -21,43 +25,56 @@ header {
 }
 
 .header-logo {
-    height: 40px; /* Adjust logo size as needed */
+    height: 45px; /* Slightly larger logo */
     margin-right: 15px;
     border-radius: 50%; /* Optional: for circular logo */
+    border: 2px solid #ffd700; /* Gold border around logo */
 }
 
 header h1 {
     margin: 0;
-    font-size: 1.8rem;
+    font-size: 2rem;
+    color: #ffd700; /* Gold heading */
+    letter-spacing: 0.05em; /* Spacing for premium feel */
 }
 
+/* Refresh Button */
 #refreshButton {
-    background-color: #007bff;
-    color: white;
+    background-color: #ffd700; /* Gold button */
+    color: #000; /* Black text on gold */
     border: none;
-    padding: 0.7rem 1.2rem;
+    padding: 0.7rem 1.5rem;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 #refreshButton:hover {
-    background-color: #0056b3;
+    background-color: #e0b000; /* Darker gold on hover */
+    transform: translateY(-2px); /* Slight lift effect */
 }
 
+/* Main Content Area */
 main {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 20px auto;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    padding: 30px;
+    max-width: 900px; /* Slightly narrower for focus */
+    margin: 30px auto;
+    background-color: #2a2a2a; /* Darker background for content box */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
 }
 
+/* News Article Styling */
 .news-article {
-    border-bottom: 1px solid #eee;
-    padding: 15px 0;
+    border-bottom: 1px solid #444; /* Darker separator */
+    padding: 20px 0;
+    transition: background-color 0.2s ease;
+}
+
+.news-article:hover {
+    background-color: #3a3a3a; /* Slightly lighter on hover */
 }
 
 .news-article:last-child {
@@ -65,39 +82,48 @@ main {
 }
 
 .news-article h2 {
-    color: #0056b3;
     margin-top: 0;
-    font-size: 1.5rem;
+    margin-bottom: 8px;
+    font-size: 1.6rem;
 }
 
 .news-article h2 a {
     text-decoration: none;
-    color: #0056b3;
+    color: #ffd700; /* Gold link for headlines */
+    transition: color 0.2s ease;
 }
 
 .news-article h2 a:hover {
+    color: #e0b000; /* Darker gold on hover */
     text-decoration: underline;
 }
 
 .news-article p {
-    line-height: 1.6;
+    font-size: 1rem;
+    color: #b0b0b0; /* Lighter gray for summary */
     margin-bottom: 10px;
 }
 
 .news-meta {
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #888; /* Even lighter gray for meta info */
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 15px; /* Space between meta items */
 }
 
 .news-meta span {
-    margin-right: 15px;
+    display: flex;
+    align-items: center;
 }
 
+/* Footer */
 footer {
     text-align: center;
-    padding: 1rem 0;
-    color: #666;
+    padding: 1.5rem 0;
+    color: #888;
     font-size: 0.8rem;
     margin-top: 20px;
+    background-color: #2a2a2a; /* Match main background or slightly different */
 }

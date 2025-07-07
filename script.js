@@ -13,7 +13,7 @@ async function fetchNews() {
 
     } catch (error) {
         console.error('Error fetching news:', error);
-        newsContainer.innerHTML = '<p>Failed to load news. Please try again later.</p>';
+        newsContainer.innerHTML = '<p>Failed to load news. Please try again later. (Check browser console for details)</p>';
     }
 }
 
@@ -29,11 +29,11 @@ function parseCSV(csv) {
 
     for (let i = 1; i < nonEmptyLines.length; i++) {
         const currentLine = nonEmptyLines[i].split(',');
-        // Basic check to ensure row has data for headers
+        // Basic check to ensure row has at least as many columns as headers
         if (currentLine.length >= headers.length) { 
             const row = {};
             for (let j = 0; j < headers.length; j++) {
-                // Use ternary operator to handle potential undefined if currentLine is shorter than headers
+                // Use ternary operator to handle potential undefined if currentLine is shorter than headers, default to empty string
                 row[headers[j]] = currentLine[j] ? currentLine[j].trim() : ''; 
             }
             data.push(row);
@@ -51,27 +51,63 @@ function displayNews(news) {
         return;
     }
 
-    // Display news in reverse order (most recent first, assuming new rows are appended)
-    // Filter out articles with no valid headline if they exist
-    news.reverse().filter(article => article.Headline && article.Headline.trim() !== '').forEach(article => {
+    // Sort news by published time descending (most recent first)
+    // Assuming 'Published Time' is parseable by Date constructor
+    news.sort((a, b) => {
+        const dateA = new Date(a['Published Time']);
+        const dateB = new Date(b['Published Time']);
+        return dateB - dateA; // Descending order
+    }).forEach(article => {
+        // Basic validation and default values
+        const headline = article.Headline && article.Headline.trim() !== '' ? article.Headline.trim() : 'No Headline';
+        const summary = article.Summary && article.Summary.trim() !== '' ? article.Summary.trim() : 'No Summary';
+        
+        let url = article.URL && article.URL.trim() !== '' ? article.URL.trim() : '#';
+        // Add basic URL scheme if missing for relative URLs (unlikely from Marketaux but good practice)
+        if (url !== '#' && !url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'https://' + url;
+        }
+
+        const tickers = article.Tickers && article.Tickers.trim() !== '' ? article.Tickers.trim() : 'N/A';
+        
+        let publishedTimeFormatted = 'N/A';
+        if (article['Published Time']) {
+            try {
+                // Assuming current location is Rawalpindi, Punjab, Pakistan (PKT)
+                // Adjusting options for PKT timezone formatting (UTC+5)
+                const dateOptions = { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit',
+                    hour12: true, // For 12-hour format as per Notion setting
+                    timeZone: 'Asia/Karachi' // Pakistan time zone
+                };
+                const articleDate = new Date(article['Published Time']);
+                publishedTimeFormatted = articleDate.toLocaleString('en-US', dateOptions);
+            } catch (e) {
+                console.error("Error formatting date:", e);
+                publishedTimeFormatted = article['Published Time']; // Fallback to raw
+            }
+        }
+
         const articleDiv = document.createElement('div');
         articleDiv.classList.add('news-article');
-
-        const headline = article.Headline || 'No Headline';
-        const summary = article.Summary || 'No Summary';
-        const url = article.URL || '#';
-        const publishedTime = article['Published Time'] || 'N/A'; // Use bracket notation for spaces
-        const tickers = article.Tickers || 'N/A';
 
         articleDiv.innerHTML = `
             <h2><a href="${url}" target="_blank" rel="noopener noreferrer">${headline}</a></h2>
             <p>${summary}</p>
             <div class="news-meta">
-                <span>Published: ${publishedTime}</span>
+                <span>Published: ${publishedTimeFormatted}</span>
                 <span>Tickers: ${tickers}</span>
             </div>
         `;
-        newsContainer.appendChild(articleDiv);
+        // Only append if headline is not 'No Headline' (filter out completely empty rows)
+        if (headline !== 'No Headline') {
+            newsContainer.appendChild(articleDiv);
+        }
     });
 }
 
