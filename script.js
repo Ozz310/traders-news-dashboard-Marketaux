@@ -31,7 +31,8 @@ function parseCSV(csv) {
         if (currentLine.length === headers.length) { // Ensure line has correct number of columns
             const row = {};
             for (let j = 0; j < headers.length; j++) {
-                row[headers[j]] = currentLine[j]; // Data is already trimmed by parseCSVLine
+                // Data is already trimmed by parseCSVLine, handle potential missing fields
+                row[headers[j]] = currentLine[j] !== undefined ? currentLine[j] : ''; 
             }
             data.push(row);
         }
@@ -70,26 +71,37 @@ function displayNews(news) {
     }
 
     // Sort news by published time descending (most recent first)
-    // Filter out articles with no valid headline if they exist
     news.sort((a, b) => {
         const dateA = new Date(a['Published Time']);
         const dateB = new Date(b['Published Time']);
-        return isNaN(dateA) ? (isNaN(dateB) ? 0 : 1) : (isNaN(dateB) ? -1 : dateB - dateA); // Handle invalid dates
+        // Handle invalid dates for sorting: invalid dates are pushed to the end
+        if (isNaN(dateA) && isNaN(dateB)) return 0;
+        if (isNaN(dateA)) return 1;
+        if (isNaN(dateB)) return -1;
+        return dateB - dateA; // Descending order
     }).filter(article => article.Headline && article.Headline.trim() !== '').forEach(article => {
         // Basic validation and default values
         const headline = article.Headline && article.Headline.trim() !== '' ? article.Headline.trim() : 'No Headline';
         const summary = article.Summary && article.Summary.trim() !== '' ? article.Summary.trim() : 'No Summary';
         
-        let url = article.URL && article.URL.trim() !== '' ? article.URL.trim() : '#';
-        // Add basic URL scheme if missing for relative URLs (unlikely from Marketaux but good practice)
-        if (url !== '#' && !url.startsWith('http://') && !url.startsWith('https://')) {
-            url = 'https://' + url;
-        }
-        // Basic URL validation
-        try {
-            new URL(url); // Attempt to construct a URL object to validate
-        } catch (e) {
-            url = '#'; // Fallback if it's not a valid URL
+        let url = article.URL && article.URL.trim() !== '' ? article.URL.trim() : ''; // Default to empty string
+        // Strip any potential leading/trailing quotes from the URL
+        url = url.replace(/^"|"$/g, '');
+
+        // Add basic URL scheme if missing AND validate if it looks like a URL
+        if (url !== '') { // Only process if URL is not empty
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url; // Prepend https if scheme is missing
+            }
+            // Attempt to construct a URL object to validate
+            try {
+                new URL(url); 
+            } catch (e) {
+                console.warn(`Invalid URL detected: "${url}" for headline "${headline}"`);
+                url = '#'; // Fallback if it's not a valid URL
+            }
+        } else {
+            url = '#'; // If empty, make it non-clickable
         }
 
 
@@ -98,7 +110,10 @@ function displayNews(news) {
         let publishedTimeFormatted = 'N/A';
         if (article['Published Time']) {
             try {
-                const articleDate = new Date(article['Published Time']);
+                // Clean the date string: remove extra leading/trailing whitespace, quotes, and excessive trailing zeros
+                const cleanDateString = article['Published Time'].trim().replace(/^"|"$/g, '').replace(/\.0+Z$/, 'Z');
+                const articleDate = new Date(cleanDateString);
+
                 if (!isNaN(articleDate)) { // Check if date is valid
                     const dateOptions = { 
                         year: 'numeric', 
@@ -107,11 +122,12 @@ function displayNews(news) {
                         hour: '2-digit', 
                         minute: '2-digit', 
                         second: '2-digit',
-                        hour12: true,
-                        timeZone: 'Asia/Karachi' // PKT timezone
+                        hour12: true, // For 12-hour format as per Notion setting
+                        timeZone: 'Asia/Karachi' // Pakistan time zone (PKT)
                     };
                     publishedTimeFormatted = articleDate.toLocaleString('en-US', dateOptions);
                 } else {
+                    console.warn(`Could not parse date: "${article['Published Time']}" for headline "${headline}"`);
                     publishedTimeFormatted = 'Invalid Date'; // Fallback if parsing fails
                 }
             } catch (e) {
@@ -123,8 +139,11 @@ function displayNews(news) {
         const articleDiv = document.createElement('div');
         articleDiv.classList.add('news-article');
 
+        // Conditionally render headline as a link or just text
+        const headlineHtml = url !== '#' ? `<h2><a href="${url}" target="_blank" rel="noopener noreferrer">${headline}</a></h2>` : `<h2>${headline}</h2>`;
+
         articleDiv.innerHTML = `
-            <h2><a href="${url}" target="_blank" rel="noopener noreferrer">${headline}</a></h2>
+            ${headlineHtml}
             <p>${summary}</p>
             <div class="news-meta">
                 <span>Published: ${publishedTimeFormatted}</span>
