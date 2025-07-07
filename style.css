@@ -126,14 +126,14 @@ footer {
     background-color: #1a1a1a; /* Match body background */
 }
 
-/* New: Logo in Footer Styling */
+/* Logo in Footer Styling */
 .footer-logo-container {
     margin-bottom: 10px; /* Space below logo */
 }
 
 .footer-logo {
-    height: 60px; /* Adjust logo size in footer */
-    width: auto;
+    height: 40px; /* ADJUSTED HEIGHT FOR LOGO */
+    width: auto; /* Maintain aspect ratio */
     border-radius: 0; /* Ensure no rounding */
     border: none; /* No border for the logo in the footer */
     vertical-align: middle; /* Align with text if text is beside it */
