@@ -17,10 +17,9 @@ async function fetchNews() {
     }
 }
 
-// Simple CSV parser (assumes first row is headers)
+// Robust CSV parser
 function parseCSV(csv) {
     const lines = csv.split('\n');
-    // Filter out empty lines that might come from spreadsheet
     const nonEmptyLines = lines.filter(line => line.trim() !== '');
     if (nonEmptyLines.length === 0) return [];
 
@@ -28,19 +27,38 @@ function parseCSV(csv) {
     const data = [];
 
     for (let i = 1; i < nonEmptyLines.length; i++) {
-        const currentLine = nonEmptyLines[i].split(',');
-        // Basic check to ensure row has at least as many columns as headers
-        if (currentLine.length >= headers.length) { 
+        const currentLine = parseCSVLine(nonEmptyLines[i]); // Use improved line parser
+        if (currentLine.length === headers.length) { // Ensure line has correct number of columns
             const row = {};
             for (let j = 0; j < headers.length; j++) {
-                // Use ternary operator to handle potential undefined if currentLine is shorter than headers, default to empty string
-                row[headers[j]] = currentLine[j] ? currentLine[j].trim() : ''; 
+                row[headers[j]] = currentLine[j]; // Data is already trimmed by parseCSVLine
             }
             data.push(row);
         }
     }
     return data;
 }
+
+// More robust CSV line parser to handle commas within fields if quoted
+function parseCSVLine(line) {
+    const result = [];
+    let inQuote = false;
+    let currentField = '';
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+            inQuote = !inQuote;
+        } else if (char === ',' && !inQuote) {
+            result.push(currentField.trim());
+            currentField = '';
+        } else {
+            currentField += char;
+        }
+    }
+    result.push(currentField.trim()); // Add the last field
+    return result;
+}
+
 
 function displayNews(news) {
     const newsContainer = document.getElementById('news-container');
@@ -52,12 +70,12 @@ function displayNews(news) {
     }
 
     // Sort news by published time descending (most recent first)
-    // Assuming 'Published Time' is parseable by Date constructor
+    // Filter out articles with no valid headline if they exist
     news.sort((a, b) => {
         const dateA = new Date(a['Published Time']);
         const dateB = new Date(b['Published Time']);
-        return dateB - dateA; // Descending order
-    }).forEach(article => {
+        return isNaN(dateA) ? (isNaN(dateB) ? 0 : 1) : (isNaN(dateB) ? -1 : dateB - dateA); // Handle invalid dates
+    }).filter(article => article.Headline && article.Headline.trim() !== '').forEach(article => {
         // Basic validation and default values
         const headline = article.Headline && article.Headline.trim() !== '' ? article.Headline.trim() : 'No Headline';
         const summary = article.Summary && article.Summary.trim() !== '' ? article.Summary.trim() : 'No Summary';
@@ -67,29 +85,38 @@ function displayNews(news) {
         if (url !== '#' && !url.startsWith('http://') && !url.startsWith('https://')) {
             url = 'https://' + url;
         }
+        // Basic URL validation
+        try {
+            new URL(url); // Attempt to construct a URL object to validate
+        } catch (e) {
+            url = '#'; // Fallback if it's not a valid URL
+        }
+
 
         const tickers = article.Tickers && article.Tickers.trim() !== '' ? article.Tickers.trim() : 'N/A';
         
         let publishedTimeFormatted = 'N/A';
         if (article['Published Time']) {
             try {
-                // Assuming current location is Rawalpindi, Punjab, Pakistan (PKT)
-                // Adjusting options for PKT timezone formatting (UTC+5)
-                const dateOptions = { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric', 
-                    hour: '2-digit', 
-                    minute: '2-digit', 
-                    second: '2-digit',
-                    hour12: true, // For 12-hour format as per Notion setting
-                    timeZone: 'Asia/Karachi' // Pakistan time zone
-                };
                 const articleDate = new Date(article['Published Time']);
-                publishedTimeFormatted = articleDate.toLocaleString('en-US', dateOptions);
+                if (!isNaN(articleDate)) { // Check if date is valid
+                    const dateOptions = { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        second: '2-digit',
+                        hour12: true,
+                        timeZone: 'Asia/Karachi' // PKT timezone
+                    };
+                    publishedTimeFormatted = articleDate.toLocaleString('en-US', dateOptions);
+                } else {
+                    publishedTimeFormatted = 'Invalid Date'; // Fallback if parsing fails
+                }
             } catch (e) {
                 console.error("Error formatting date:", e);
-                publishedTimeFormatted = article['Published Time']; // Fallback to raw
+                publishedTimeFormatted = 'Invalid Date'; // Fallback to 'Invalid Date'
             }
         }
 
