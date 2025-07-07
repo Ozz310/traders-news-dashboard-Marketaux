@@ -22,7 +22,7 @@ body {
     flex-grow: 1; /* Allow it to take up available vertical space */
 }
 
-/* Dashboard Header Section (now inside the widget) */
+/* Dashboard Header Section (now inside the widget, no logo here) */
 .dashboard-header-section {
     background-color: #000; /* Pure black header for this section */
     color: #fff;
@@ -31,21 +31,9 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
-    /* No border-radius here, it will be sharp */
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-}
-
-.header-logo {
-    height: 45px; /* Slightly larger logo */
-    margin-right: 15px;
-    border-radius: 50%; /* Optional: for circular logo */
-    border: 2px solid #ffd700; /* Gold border around logo */
-}
-
+/* No .header-left styling needed here anymore for logo sizing */
 .dashboard-header-section h1 {
     margin: 0;
     font-size: 2rem;
@@ -74,7 +62,6 @@ body {
 /* Main Content Area (for news articles) */
 main {
     padding: 20px; /* Padding inside the news content area */
-    /* max-width, margin, background-color, box-shadow, border-radius moved to .dashboard-wrapper */
 }
 
 /* News Article Styling */
@@ -132,9 +119,22 @@ main {
 /* Footer */
 footer {
     text-align: center;
-    padding: 1.5rem 0;
+    padding: 1rem 0; /* Reduced footer padding */
     color: #888;
     font-size: 0.8rem;
     margin-top: auto; /* Push footer to bottom if content is short */
     background-color: #1a1a1a; /* Match body background */
+}
+
+/* New: Logo in Footer Styling */
+.footer-logo-container {
+    margin-bottom: 10px; /* Space below logo */
+}
+
+.footer-logo {
+    height: 60px; /* Adjust logo size in footer */
+    width: auto;
+    border-radius: 0; /* Ensure no rounding */
+    border: none; /* No border for the logo in the footer */
+    vertical-align: middle; /* Align with text if text is beside it */
 }
