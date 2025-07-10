@@ -105,7 +105,12 @@ function displayNews(news) {
         }
 
 
+        let tickersHtml = ''; // Initialize as empty
         const tickers = article.Tickers && article.Tickers.trim() !== '' ? article.Tickers.trim() : 'N/A';
+        // Only display tickers if they are not 'N/A'
+        if (tickers !== 'N/A') {
+            tickersHtml = `<span>Tickers: ${tickers}</span>`;
+        }
         
         let publishedTimeFormatted = 'N/A';
         if (article['Published Time']) {
@@ -147,7 +152,7 @@ function displayNews(news) {
             <p>${summary}</p>
             <div class="news-meta">
                 <span>Published: ${publishedTimeFormatted}</span>
-                <span>Tickers: ${tickers}</span>
+                ${tickersHtml} 
             </div>
         `;
         // Only append if headline is not 'No Headline' (filter out completely empty rows)
