@@ -48,7 +48,7 @@ function parseCSVLine(line) {
     return result;
 }
 
-// Format date for newspaper dateline
+// Format date for newspaper dateline (re-using old functionality)
 function formatNewspaperDateline(dateString) {
     if (!dateString) return 'N/A';
     try {
@@ -56,31 +56,15 @@ function formatNewspaperDateline(dateString) {
         if (isNaN(date)) throw new Error('Invalid Date');
 
         const options = { month: 'long', day: 'numeric', year: 'numeric' };
-        // Get current date to determine "Today's Dispatch" or a specific city
-        const today = new Date();
-        const isToday = date.toDateString() === today.toDateString();
-
-        let location = 'Global Dispatch'; // Default
-        // You can make this dynamic if you have location data in your sheet
-        // For a vintage feel, a static location is good
-        if (isToday) {
-            location = 'Today\'s Dispatch';
-        } else {
-            location = 'New York, NY'; // Example static location for historical news
-        }
-
-        return `${date.toLocaleString('en-US', options)} · ${location}`; 
+        return `${date.toLocaleString('en-US', options)}`; 
     } catch (e) {
-        console.error("Date parsing error:", e);
         return 'Invalid Date';
     }
 }
 
-// Format current date for masthead dateline
+// Format current date for masthead dateline (re-using old functionality)
 function formatMastheadDateline() {
     const today = new Date();
-    // Using current time (Thursday, July 10, 2025 at 11:20:52 AM PKT) for example output.
-    // The actual execution will use the current live time.
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return today.toLocaleString('en-US', options) + ' · Rawalpindi, PK'; 
 }
@@ -89,7 +73,7 @@ function formatMastheadDateline() {
 
 async function fetchNews() {
     const newsContainer = document.getElementById('news-columns'); // Target the news columns container
-    newsContainer.innerHTML = '<p>Loading the latest dispatch...</p>'; // Loading message
+    newsContainer.innerHTML = '<p>Loading news...</p>'; // Loading message
 
     try {
         const response = await fetch(GOOGLE_SHEET_URL);
@@ -140,21 +124,22 @@ function displayNews(articlesToDisplay) {
         } else { url = '#'; }
 
         // Determine if BREAKING ribbon is needed (Example: first article, or based on keywords)
-        // You can add more complex logic here if needed (e.g., if headline contains "BREAKING")
+        // This logic needs to be simplified as there's no specific 'BREAKING' tag from Marketaux API
+        // For demonstration, let's mark the very first article as BREAKING.
         const isBreaking = index === 0; // Mark the very first article as BREAKING for demonstration
-        const breakingRibbon = isBreaking ? '<span class="breaking-ribbon">BREAKING</span>' : '';
+        const breakingRibbonHtml = isBreaking ? '<span class="breaking-ribbon">BREAKING</span>' : '';
 
         const articleDiv = document.createElement('div');
         articleDiv.classList.add('news-article');
-        articleDiv.classList.add('column-item'); 
+        // No 'column-item' class as the CSS grid handles it differently now.
 
         const summaryHtml = summary ? `<p>${summary.substring(0, 300)}...</p>` : '<p>No summary available.</p>'; // Truncate summary for initial view
-        const readMoreHtml = summary.length > 300 && url !== '#' ? `<a href="${url}" target="_blank" rel="noopener noreferrer" class="read-more-link">Read More</a>` : ''; // Only show if truncated and valid URL
+        const readMoreHtml = summary.length > 300 && url !== '#' ? `<a href="${url}" target="_blank" rel="noopener noreferrer" class="read-more-link">Read More</a>` : '';
 
 
         // Build the HTML for a single news article
         articleDiv.innerHTML = `
-            ${breakingRibbon}
+            ${breakingRibbonHtml}
             <h2><a href="${url}" target="_blank" rel="noopener noreferrer">${headline}</a></h2>
             <span class="article-dateline">${formatNewspaperDateline(publishedTime)}</span>
             ${summaryHtml}
