@@ -18,22 +18,22 @@ body {
     background-color: #2a2a2a; /* Darker background for content box */
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     border-radius: 0; /* No rounded corners for the entire widget */
-    overflow: hidden; /* Ensure no content spills */
+    overflow: hidden; /* Contain content */
     flex-grow: 1; /* Allow it to take up available vertical space */
 }
 
-/* Dashboard Header Section - Contains logo, title, and refresh button */
+/* Dashboard Header Section - Now without refresh button */
 .dashboard-header-section {
     background-color: #000; /* Pure black header for this section */
     color: #fff;
     padding: 1rem 2rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Center content now that button is gone */
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
 }
 
-.header-masthead-group { /* New styling for logo and title together */
+.header-masthead-group { /* Wrapper for logo and title */
     display: flex;
     align-items: center;
     gap: 15px; /* Space between logo and title */
@@ -54,23 +54,8 @@ body {
     white-space: nowrap; /* Prevent title from wrapping */
 }
 
-/* Refresh Button */
-#refreshButton {
-    background-color: #ffd700; /* Gold button */
-    color: #000; /* Black text on gold */
-    border: none;
-    padding: 0.7rem 1.5rem;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
+/* Refresh Button - STYLES REMOVED as button is gone */
 
-#refreshButton:hover {
-    background-color: #e0b000; /* Darker gold on hover */
-    transform: translateY(-2px); /* Slight lift effect */
-}
 
 /* Main Content Area (for news articles) - SCROLLABLE */
 main {
@@ -199,10 +184,7 @@ footer {
         font-size: 1.8rem; /* Smaller title on mobile */
         white-space: normal; /* Allow wrapping */
     }
-    #refreshButton {
-        width: 100%;
-        box-sizing: border-box;
-    }
+    /* Removed button/input specific mobile width */
     .newspaper-container {
         margin: 10px;
     }
