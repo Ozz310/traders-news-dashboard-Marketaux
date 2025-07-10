@@ -1,4 +1,4 @@
-/* --- Global Styles & Newspaper Theme Base --- */
+/* --- Global Styles & Base --- */
 body {
     font-family: 'Roboto', Arial, sans-serif;
     margin: 0;
@@ -22,7 +22,7 @@ body {
     flex-grow: 1; /* Allow it to take up available vertical space */
 }
 
-/* Dashboard Header Section (inside the widget, no logo here) */
+/* Dashboard Header Section - Contains logo, title, and refresh button */
 .dashboard-header-section {
     background-color: #000; /* Pure black header for this section */
     color: #fff;
@@ -33,11 +33,25 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
 }
 
+.header-masthead-group { /* New styling for logo and title together */
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between logo and title */
+}
+
+.header-logo-top { /* Styling for the logo at the very top */
+    height: 45px; /* Adjust size as needed */
+    width: auto;
+    border-radius: 50%; /* Make it circular if preferred */
+    border: 2px solid #ffd700; /* Gold border */
+}
+
 .dashboard-header-section h1 {
     margin: 0;
     font-size: 2rem;
     color: #ffd700; /* Gold heading */
     letter-spacing: 0.05em; /* Spacing for premium feel */
+    white-space: nowrap; /* Prevent title from wrapping */
 }
 
 /* Refresh Button */
@@ -159,7 +173,7 @@ footer {
 }
 
 .footer-logo {
-    height: 40px;
+    height: 40px; /* Adjust as needed */
     width: auto;
     border-radius: 0;
     border: none;
@@ -171,28 +185,28 @@ footer {
 }
 
 @media (max-width: 600px) {
-    .dashboard-header-section h1 {
-        font-size: 1.8rem;
-    }
     .dashboard-header-section {
         flex-direction: column;
         align-items: center;
         gap: 10px;
     }
-    .top-controls {
+    .header-masthead-group {
         flex-direction: column;
-        align-items: center;
-        width: 100%;
-        gap: 10px;
+        text-align: center;
+        gap: 5px;
     }
-    .vintage-button, .vintage-input, .auto-refresh-toggle {
+    .dashboard-header-section h1 {
+        font-size: 1.8rem; /* Smaller title on mobile */
+        white-space: normal; /* Allow wrapping */
+    }
+    #refreshButton {
         width: 100%;
         box-sizing: border-box;
     }
     .newspaper-container {
         margin: 10px;
     }
-    .main-content-area {
-        padding: 0 1rem;
+    main {
+        padding: 1rem;
     }
 }
