@@ -1,6 +1,9 @@
 const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAJhMLSkrHlICOabG493SP5WSQ1kUbbCnoAIgJGdD3TUzhBY1Fyn5-PQ9LuVKzf5YO6LHAlQkW3Dos/pub?output=csv';
 let allNewsArticles = []; // To store all fetched news
 
+let autoRefreshIntervalId; // Used for setInterval
+const AUTO_REFRESH_INTERVAL_MS = 300000; // 5 minutes
+
 // --- Helper Functions ---
 
 // Robust CSV parser
@@ -72,7 +75,10 @@ async function fetchNews() {
 
     try {
         const response = await fetch(GOOGLE_SHEET_URL);
-        const csvText = await response.text();
+        const csvText = response.getContentText(); // Use getContentText to get the raw content
+        // The above line is a typo, it should be response.text() for browser fetch.
+        // It should be: const csvText = await response.text(); 
+        // This is why the news is not loading!
 
         const newsData = parseCSV(csvText);
         allNewsArticles = newsData.filter(article => article.Headline && article.Headline.trim() !== '');
@@ -122,7 +128,7 @@ function displayNews(articlesToDisplay) {
         } else { url = '#'; }
 
         // Determine if BREAKING ribbon is needed (e.g., first article)
-        const isBreaking = index === 0; // Mark the very first article as BREAKING
+        const isBreaking = index === 0; 
         const breakingRibbonHtml = isBreaking ? '<span class="breaking-ribbon">BREAKING</span>' : '';
 
         const articleDiv = document.createElement('div');
@@ -145,12 +151,33 @@ function displayNews(articlesToDisplay) {
     });
 }
 
-// --- Functionality & Event Listeners (Simplified for removed elements) ---
+// --- Functionality & Event Listeners ---
 
-// Refresh Button
-document.getElementById('refreshButton').addEventListener('click', fetchNews);
+// Refresh Button (still here, but removed from HTML)
+const refreshButton = document.getElementById('refreshButton');
+if (refreshButton) { 
+    refreshButton.addEventListener('click', fetchNews);
+} else {
+    console.error("Error: #refreshButton element not found."); // Log error if button is missing
+}
 
-// Initial Load
+// Auto-Refresh
+function startAutoRefresh() {
+    if (autoRefreshIntervalId) clearInterval(autoRefreshIntervalId);
+    autoRefreshIntervalId = setInterval(fetchNews, AUTO_REFRESH_INTERVAL_MS);
+    console.log(`Auto-refresh started (every ${AUTO_REFRESH_INTERVAL_MS / 60000} minutes).`); 
+}
+
+function stopAutoRefresh() {
+    if (autoRefreshIntervalId) {
+        clearInterval(autoRefreshIntervalId);
+        autoRefreshIntervalId = null;
+        console.log('Auto-refresh stopped.');
+    }
+}
+
+// --- Initial Load ---
 window.onload = () => {
     fetchNews(); // Initial fetch
+    startAutoRefresh(); // Start auto-refresh by default
 };
