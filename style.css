@@ -1,363 +1,165 @@
 /* --- Global Styles & Newspaper Theme Base --- */
-:root {
-    /* Color Palette */
-    --color-parchment: #f8f5e9;
-    --color-black-ink: #1a1a1a;
-    --color-muted-red: #a00;
-    --color-muted-brown: #8b4513;
-    --color-light-gray: #ccc; /* For subtle UI elements */
-    --color-dark-gray: #444; /* For deeper shadows/lines */
-}
-
-html, body {
+body {
+    font-family: 'Roboto', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    height: 100%;
-    /* Parchment Background with subtle texture */
-    background-color: var(--color-parchment);
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3ggIjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTAgMzguNzg1TDIuOTA3IDQwIDQwIDQuMDA3IDM4LjU2MSAwIDIwLjQyNiAxOC4xNzQgMS4wMjggMzcuMzYyem00LjMyNyAwTDAgMzYuMzg1VjQwYzEuMjc4LS4wNzggMi42ODYtLjQzIDMuNjcxLTEuMjE1em0zMy4yNy04Ljk2NEw0MCAzMi41MDhWMEgzOC41NjFMMTkuNjQyIDE4Ljc5MkwxLjA1NyAzNy4wMTJjMS4wODIgLjMyNyAyLjU1OC40NTYgMy42OTguNDg3em0yMS4yMDctMjcuNDJMMzguNTYxIDBWMjguNTE4bC04Ljk2NSAzLjMyNy01LjI1LTUuMjUtLjA2Ni0uMDY1LS43ODEtLjc4MS01LjI1LTUuMjVjLS4xMy0uMTMtLjI1Ni0uMjYtLjM4My0uMzg2LS4wNTktLjA1Ny0uMTctLjE3LS4yMDctLjIwN2wtNC4zMjctNC4zMjctLjA1Ni0uMDU4LS40MTYtLjQxNkw1LjQ4MiA0LjU2MWwtLjA1Ni0uMDYtLjgyMy0uODIzem0xMi4zMjggNDUuOTk0bDIuNTU4LS41NjEtMjguNTY0LTI4LjU2NHYyLjg1Nkw2LjQ3MiA0MC0yLjUgMjIuNjQybDE0LjM5LTIuMTU4TDIwLjUyOCAzNC41MjhsMTQuMjkzLTUuMjAyIDEuMTUtMS4xNTJ6Ii8+PC9nPg=='); /* Subtle paper dots */
-    font-family: 'Merriweather', serif; /* Default body font */
-    color: var(--color-black-ink);
+    background-color: #1a1a1a; /* Dark background */
+    color: #e0e0e0; /* Light text color */
     line-height: 1.6;
-    overflow-x: hidden; /* Prevent horizontal scroll */
-}
-
-/* --- Font Declarations (for specific elements) --- */
-.masthead-title, .news-article h2, .ad-headline {
-    font-family: 'Playfair Display', serif;
-}
-
-.article-dateline, .read-more-link, .vintage-button, .vintage-checkbox + label, .vintage-input, .ad-link, .newspaper-footer {
-    font-family: 'EB Garamond', serif;
-}
-
-
-/* --- Newspaper Container (the whole widget) --- */
-.newspaper-container {
-    max-width: 900px; /* Max width of the entire newspaper widget */
-    margin: 20px auto; /* Center it */
-    background-color: var(--color-parchment);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2), /* Subtle shadow to lift off background */
-                inset 0 0 10px rgba(0, 0, 0, 0.05); /* Inner shadow for paper depth */
-    border: 1px solid var(--color-dark-gray); /* Faint paper edge */
-    overflow: hidden; /* Contain content */
-    display: flex;
+    display: flex; /* For centering the main dashboard */
     flex-direction: column;
-    min-height: 80vh; /* Ensure it's tall enough on screen */
-    position: relative; /* For fold lines */
+    min-height: 100vh; /* Ensure footer stays at bottom */
 }
 
-/* Subtle Fold Lines */
-.newspaper-container::before,
-.newspaper-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 1px; /* Thin line */
-    background-color: rgba(0, 0, 0, 0.05); /* Very faint ink */
-    z-index: 1; /* Above background, below content */
-}
-.newspaper-container::before {
-    left: 25%; /* First fold line */
-}
-.newspaper-container::after {
-    left: 75%; /* Second fold line */
+/* Dashboard Wrapper - The main widget container */
+.dashboard-wrapper {
+    max-width: 900px; /* Width of the entire widget */
+    margin: 30px auto; /* Center it horizontally with top/bottom margin */
+    background-color: #2a2a2a; /* Darker background for content box */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    border-radius: 0; /* No rounded corners for the entire widget */
+    overflow: hidden; /* Ensure no content spills */
+    flex-grow: 1; /* Allow it to take up available vertical space */
 }
 
-
-/* --- Masthead (Header Section) --- */
-.masthead {
-    text-align: center;
-    padding: 1rem 0;
-    border-bottom: 2px solid var(--color-black-ink); /* Strong line below masthead */
-    margin-bottom: 1rem;
-    position: relative;
-}
-
-.masthead-title {
-    font-size: 2.8rem; /* Large masthead title */
-    font-weight: 700;
-    color: var(--color-black-ink);
-    margin: 0;
-    line-height: 1.1;
-    text-transform: uppercase; /* Classic newspaper feel */
-}
-
-.masthead-meta {
+/* Dashboard Header Section (inside the widget, no logo here) */
+.dashboard-header-section {
+    background-color: #000; /* Pure black header for this section */
+    color: #fff;
+    padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
-    align-items: flex-end; /* Align date/controls to bottom of section */
-    padding: 0.5rem 2rem 0; /* Padding around meta elements */
-    font-size: 0.85rem;
-    color: var(--color-dark-gray);
-    border-top: 1px solid var(--color-light-gray); /* Thin line above date/controls */
-    padding-top: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-#current-dateline {
-    font-style: italic;
-    white-space: nowrap; /* Prevent wrapping */
-}
-
-/* --- Top Controls (Refresh, Auto-Refresh, Search) --- */
-.top-controls {
-    display: flex;
     align-items: center;
-    gap: 15px; /* Space between control elements */
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    justify-content: flex-end;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
 }
 
-.vintage-button {
-    background-color: transparent;
-    border: 2px solid var(--color-black-ink);
-    color: var(--color-black-ink);
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
+.dashboard-header-section h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #ffd700; /* Gold heading */
+    letter-spacing: 0.05em; /* Spacing for premium feel */
+}
+
+/* Refresh Button */
+#refreshButton {
+    background-color: #ffd700; /* Gold button */
+    color: #000; /* Black text on gold */
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
     cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 2px 2px 0 var(--color-dark-gray); /* Simple 3D effect */
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.vintage-button:hover {
-    background-color: var(--color-black-ink);
-    color: var(--color-parchment);
-    box-shadow: 0 0 0 var(--color-dark-gray); /* "Pressed" effect */
-    transform: translate(2px, 2px);
+#refreshButton:hover {
+    background-color: #e0b000; /* Darker gold on hover */
+    transform: translateY(-2px); /* Slight lift effect */
 }
 
-.vintage-checkbox {
-    /* Hide default checkbox */
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.vintage-checkbox + label {
-    position: relative;
-    padding-left: 25px; /* Space for custom box */
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: var(--color-dark-gray);
-    white-space: nowrap;
-}
-
-.vintage-checkbox + label::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 2px;
-    width: 16px;
-    height: 16px;
-    border: 1px solid var(--color-black-ink);
-    background-color: var(--color-parchment);
-    transition: all 0.2s ease-in-out;
-}
-
-.vintage-checkbox:checked + label::before {
-    background-color: var(--color-black-ink);
-    border-color: var(--color-black-ink);
-}
-
-.vintage-checkbox:checked + label::after {
-    content: '✔'; /* Checkmark */
-    position: absolute;
-    left: 2px;
-    top: 1px;
-    color: var(--color-parchment);
-    font-size: 14px;
-    line-height: 1;
-}
-
-.vintage-input {
-    border: 1px solid var(--color-black-ink);
-    padding: 0.4rem 0.6rem;
-    font-size: 0.9rem;
-    color: var(--color-black-ink);
-    background-color: var(--color-parchment);
-    outline: none;
-    box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
-    transition: border-color 0.2s ease;
-}
-
-.vintage-input::placeholder {
-    color: var(--color-dark-gray);
-    font-style: italic;
-}
-.vintage-input:focus {
-    border-color: var(--color-muted-brown);
-}
-
-/* --- Main Content Area & Columns --- */
-.main-content-area {
-    padding: 0 2rem; /* Side padding for the whole content area */
-    flex-grow: 1; /* Allow it to fill vertical space */
-    display: flex;
-    flex-direction: column; /* Content and ads stacked */
-}
-
-.news-columns-container {
-    display: grid;
-    grid-template-columns: 1fr; /* Default to 1 column */
-    gap: 1.5rem; /* Space between columns/articles */
-    flex-grow: 1; /* Allow news articles to fill vertical space */
-    padding-bottom: 1rem; /* Space above ads/footer */
-
-    /* Scrollability */
-    max-height: calc(100vh - 250px); /* Adjust based on header/footer height */
-    overflow-y: auto;
+/* Main Content Area (for news articles) - SCROLLABLE */
+main {
+    padding: 20px; /* Padding inside the news content area */
+    max-height: 70vh; /* Set a maximum height relative to viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    position: relative; /* For breaking ribbon positioning */
 }
 
-/* Scrollbar styling for newspaper theme */
-.news-columns-container::-webkit-scrollbar {
+/* Scrollbar styling for dark theme */
+main::-webkit-scrollbar {
     width: 8px;
 }
-.news-columns-container::-webkit-scrollbar-track {
-    background: #e0e0d0; /* Lighter track */
-    border-radius: 4px;
+main::-webkit-scrollbar-track {
+    background: #333; /* Darker track */
+    border-radius: 10px;
 }
-.news-columns-container::-webkit-scrollbar-thumb {
-    background: var(--color-muted-brown); /* Brownish thumb */
-    border-radius: 4px;
+main::-webkit-scrollbar-thumb {
+    background: #555; /* Darker thumb */
+    border-radius: 10px;
 }
-.news-columns-container::-webkit-scrollbar-thumb:hover {
-    background: darken(var(--color-muted-brown), 10%); /* Darker brown on hover */
+main::-webkit-scrollbar-thumb:hover {
+    background: #777; /* Lighter thumb on hover */
 }
 
 
-/* --- News Article Styling (Clippings) --- */
+/* News Article Styling (Card-based in this theme) */
 .news-article {
-    position: relative;
-    padding-bottom: 1.5rem; /* Space below article before next separator */
-    border-bottom: 1px dashed var(--color-dark-gray); /* Dashed separator */
-    margin-bottom: 1.5rem; /* Space for the dashed line below it */
+    background-color: #333; /* Slightly lighter background for the card */
+    margin-bottom: 15px; /* Space between cards */
+    padding: 15px; /* Padding inside the card */
+    border-radius: 5px; /* Subtle rounded corners for cards */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Card shadow */
+    border: 1px solid #444; /* Subtle border */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.news-article:last-of-type {
-    border-bottom: none; /* No border for the very last article */
-    margin-bottom: 0;
+.news-article:hover {
+    transform: translateY(-2px); /* Lift effect on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Enhanced shadow on hover */
+}
+
+.news-article:last-child {
+    margin-bottom: 0; /* No bottom margin for the last card */
+    border-bottom: none; /* No extra border for the last card */
 }
 
 .news-article h2 {
-    font-size: 1.4rem; /* Newspaper headline size */
-    font-weight: 700;
-    color: var(--color-black-ink);
-    line-height: 1.2;
     margin-top: 0;
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
+    font-size: 1.4rem;
+    line-height: 1.3; /* Tighter line height for headlines */
 }
 
 .news-article h2 a {
     text-decoration: none;
-    color: inherit; /* Inherit black ink color */
-}
-.news-article h2 a:hover {
-    text-decoration: underline;
+    color: #ffd700; /* Gold link for headlines */
+    transition: color 0.2s ease;
 }
 
-.article-dateline {
-    font-style: italic;
-    color: var(--color-dark-gray);
-    margin-bottom: 0.8rem;
-    display: block; /* Ensure it's on its own line */
+.news-article h2 a:hover {
+    color: #e0b000; /* Darker gold on hover */
+    text-decoration: underline;
 }
 
 .news-article p {
-    font-size: 0.95rem;
-    color: var(--color-black-ink);
-    line-height: 1.5;
-    margin-bottom: 0.8rem;
+    font-size: 0.9rem; /* Slightly smaller summary text */
+    color: #b0b0b0; /* Lighter gray for summary */
+    line-height: 1.5; /* Good line height for summary */
+    margin-bottom: 10px;
 }
 
-.read-more-link {
-    color: var(--color-muted-red); /* Muted red for "Read More" */
-    text-decoration: none;
-    font-weight: 700;
-    display: inline-block;
-    padding-bottom: 2px;
-    border-bottom: 1px solid var(--color-muted-red);
-    transition: all 0.2s ease-in-out;
-}
-
-.read-more-link:hover {
-    color: darken(var(--color-muted-red), 10%);
-    border-bottom-color: darken(var(--color-muted-red), 10%);
-}
-
-/* --- BREAKING Ribbon --- */
-.breaking-ribbon {
-    position: absolute;
-    top: 5px; /* Adjust top/right to position */
-    right: 5px;
-    background-color: var(--color-muted-red);
-    color: var(--color-parchment); /* Light text on ribbon */
-    font-weight: 700;
-    font-size: 0.7rem;
-    padding: 3px 8px;
-    transform: rotate(10deg); /* Slightly angled */
-    z-index: 10;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-
-/* --- Ad Boxes --- */
-.ad-box {
-    background-color: #eee; /* Lighter background for ads */
-    border: 1px solid var(--color-muted-brown);
-    padding: 1rem;
-    text-align: center;
-    margin-top: 1.5rem; /* Space above ads */
-    margin-bottom: 1.5rem;
-}
-
-.ad-headline {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--color-muted-brown);
-    margin-bottom: 0.5rem;
-}
-
-.ad-body {
-    font-size: 0.9rem;
-    color: var(--color-black-ink);
-    margin-bottom: 0.8rem;
-}
-
-.ad-link {
-    color: var(--color-muted-red);
-    font-weight: 700;
-    text-decoration: underline;
-}
-.ad-link:hover {
-    color: darken(var(--color-muted-red), 10%);
-}
-
-
-/* --- Footer --- */
-.newspaper-footer {
-    text-align: center;
-    padding: 1rem 2rem;
-    border-top: 1px solid var(--color-light-gray);
-    font-size: 0.75rem;
-    color: var(--color-dark-gray);
-    margin-top: auto; /* Pushes footer to bottom */
+.news-meta {
+    font-size: 0.75rem; /* Even smaller meta info */
+    color: #888; /* Even lighter gray for meta info */
+    margin-top: 10px;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.news-meta span {
+    display: flex;
     align-items: center;
 }
 
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    color: #888;
+    font-size: 0.8rem;
+    margin-top: auto; /* Push footer to bottom if content is short */
+    background-color: #1a1a1a; /* Match body background */
+}
+
+/* Logo in Footer Styling */
 .footer-logo-container {
-    margin-bottom: 0.5rem;
+    margin-bottom: 10px;
 }
 
 .footer-logo {
-    height: 40px; /* Adjust as needed */
+    height: 40px;
     width: auto;
     border-radius: 0;
     border: none;
@@ -365,49 +167,30 @@ html, body {
 
 /* --- Responsive Adjustments --- */
 @media (min-width: 768px) {
-    .news-columns-container {
-        grid-template-columns: 1fr 1fr; /* 2 columns on larger screens */
-        padding-right: 1.5rem; /* Space for the right column line */
-        border-right: 1px solid rgba(0, 0, 0, 0.05); /* Very faint central column line */
-    }
-
-    .news-article {
-        border-bottom: 1px dashed var(--color-dark-gray);
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-    }
-
-    /* Adjust ad positions for 2 columns */
-    .ad-box.ad-side {
-        position: sticky; /* Sticky ads in side column */
-        top: 20px; /* Adjust as needed */
-    }
+    /* No column specific grid template in this version. Articles stack. */
 }
 
 @media (max-width: 600px) {
-    .masthead-title {
-        font-size: 2.2rem;
+    .dashboard-header-section h1 {
+        font-size: 1.8rem;
     }
-    .masthead-meta {
+    .dashboard-header-section {
         flex-direction: column;
         align-items: center;
         gap: 10px;
     }
     .top-controls {
-        flex-direction: column; /* Stack controls vertically */
+        flex-direction: column;
         align-items: center;
+        width: 100%;
         gap: 10px;
     }
-    .vintage-button, .vintage-input {
-        width: 100%; /* Full width buttons/input */
-        box-sizing: border-box; /* Include padding/border in width */
-    }
-    .auto-refresh-toggle {
-        margin-top: 5px;
+    .vintage-button, .vintage-input, .auto-refresh-toggle {
+        width: 100%;
+        box-sizing: border-box;
     }
     .newspaper-container {
-        margin: 10px auto;
-        padding: 0;
+        margin: 10px;
     }
     .main-content-area {
         padding: 0 1rem;
