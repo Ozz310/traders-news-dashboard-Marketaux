@@ -58,6 +58,7 @@ function formatNewspaperDateline(dateString) {
         const options = { month: 'long', day: 'numeric', year: 'numeric' };
         return `${date.toLocaleString('en-US', options)}`; 
     } catch (e) {
+        console.error("Date parsing error:", e);
         return 'Invalid Date';
     }
 }
@@ -73,7 +74,14 @@ function formatMastheadDateline() {
 
 async function fetchNews() {
     const newsContainer = document.getElementById('news-columns'); // Target the news columns container
-    newsContainer.innerHTML = '<p>Loading news...</p>'; // Loading message
+    // --- THIS IS THE LINE THAT WAS FAILING ---
+    if (!newsContainer) { 
+        console.error("Error: #news-columns element not found. Cannot load news.");
+        return; // Exit if element is not found
+    }
+    // --- END FIX ---
+
+    newsContainer.innerHTML = '<p>Loading the latest dispatch...</p>'; // Loading message
 
     try {
         const response = await fetch(GOOGLE_SHEET_URL);
@@ -92,6 +100,10 @@ async function fetchNews() {
 
 function displayNews(articlesToDisplay) {
     const newsContainer = document.getElementById('news-columns');
+    if (!newsContainer) { 
+        console.error("Error: #news-columns element not found in displayNews.");
+        return; 
+    }
     newsContainer.innerHTML = ''; // Clear loading message
 
     if (articlesToDisplay.length === 0) {
@@ -155,17 +167,18 @@ function displayNews(articlesToDisplay) {
 // Masthead Dateline Update
 function updateMastheadDateline() {
     const datelineSpan = document.getElementById('current-dateline');
-    if (datelineSpan) {
+    if (datelineSpan) { // Check if element exists before setting text
         datelineSpan.textContent = formatMastheadDateline();
     }
 }
 
-// Refresh Button
-document.getElementById('refreshButton').addEventListener('click', fetchNews);
-
 // Auto-Refresh Toggle
 function setupAutoRefresh() {
     const toggle = document.getElementById('autoRefreshToggle');
+    if (!toggle) { // Check if element exists
+        console.error("Error: #autoRefreshToggle element not found.");
+        return;
+    }
     // Load saved state
     const savedState = localStorage.getItem(AUTO_REFRESH_KEY);
     if (savedState === 'true') {
@@ -202,21 +215,38 @@ function stopAutoRefresh() {
 }
 
 // Search Bar Functionality
-document.getElementById('searchBar').addEventListener('input', (event) => {
-    const searchTerm = event.target.value.toLowerCase();
-    const filteredNews = allNewsArticles.filter(article => {
-        const headline = (article.Headline || '').toLowerCase();
-        const summary = (article.Summary || '').toLowerCase();
-        const tickers = (article.Tickers || '').toLowerCase();
-        return headline.includes(searchTerm) || summary.includes(searchTerm) || tickers.includes(searchTerm);
+function setupSearchBar() {
+    const searchBar = document.getElementById('searchBar');
+    if (!searchBar) { // Check if element exists
+        console.error("Error: #searchBar element not found.");
+        return;
+    }
+    searchBar.addEventListener('input', (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        const filteredNews = allNewsArticles.filter(article => {
+            const headline = (article.Headline || '').toLowerCase();
+            const summary = (article.Summary || '').toLowerCase();
+            const tickers = (article.Tickers || '').toLowerCase();
+            return headline.includes(searchTerm) || summary.includes(searchTerm) || tickers.includes(searchTerm);
+        });
+        displayNews(filteredNews); // Re-display filtered news
     });
-    displayNews(filteredNews); // Re-display filtered news
-});
+}
 
 
-// --- Initial Load ---
-document.addEventListener('DOMContentLoaded', () => {
+// --- Initial Load - Use window.onload for absolute certainty ---
+window.onload = () => {
+    // Attach event listener for Refresh Button
+    const refreshButton = document.getElementById('refreshButton');
+    if (refreshButton) { // Check if element exists
+        refreshButton.addEventListener('click', fetchNews);
+    } else {
+        console.error("Error: #refreshButton element not found.");
+    }
+
+    // Call setup functions
     updateMastheadDateline();
     fetchNews(); // Initial fetch
     setupAutoRefresh(); // Setup auto-refresh
-});
+    setupSearchBar(); // Setup search bar
+};
