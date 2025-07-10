@@ -22,13 +22,13 @@ body {
     flex-grow: 1; /* Allow it to take up available vertical space */
 }
 
-/* Dashboard Header Section - Now without refresh button */
+/* Dashboard Header Section - Contains logo, title (no controls) */
 .dashboard-header-section {
     background-color: #000; /* Pure black header for this section */
     color: #fff;
     padding: 1rem 2rem;
-    display: flex;
-    justify-content: center; /* Center content now that button is gone */
+    display: flex; /* Changed to flex for centering */
+    justify-content: center; /* Center horizontally now */
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
 }
@@ -53,9 +53,6 @@ body {
     letter-spacing: 0.05em; /* Spacing for premium feel */
     white-space: nowrap; /* Prevent title from wrapping */
 }
-
-/* Refresh Button - STYLES REMOVED as button is gone */
-
 
 /* Main Content Area (for news articles) - SCROLLABLE */
 main {
@@ -148,21 +145,12 @@ footer {
     padding: 1rem 0;
     color: #888;
     font-size: 0.8rem;
-    margin-top: auto; /* Push footer to bottom if content is short */
+    margin-top: auto; /* Push footer to bottom */
     background-color: #1a1a1a; /* Match body background */
 }
 
-/* Logo in Footer Styling */
-.footer-logo-container {
-    margin-bottom: 10px;
-}
+/* Footer logo container - STYLES REMOVED as logo is gone from footer */
 
-.footer-logo {
-    height: 40px; /* Adjust as needed */
-    width: auto;
-    border-radius: 0;
-    border: none;
-}
 
 /* --- Responsive Adjustments --- */
 @media (min-width: 768px) {
@@ -184,7 +172,6 @@ footer {
         font-size: 1.8rem; /* Smaller title on mobile */
         white-space: normal; /* Allow wrapping */
     }
-    /* Removed button/input specific mobile width */
     .newspaper-container {
         margin: 10px;
     }
