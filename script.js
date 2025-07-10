@@ -2,7 +2,7 @@ const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAJhM
 let allNewsArticles = []; // To store all fetched news for search/filtering
 let autoRefreshIntervalId; // To store the interval ID for auto-refresh
 
-const AUTO_REFRESH_KEY = 'tradersGazette_autoRefresh';
+const AUTO_REFRESH_KEY = 'tradersGazette_autoRefresh'; // Key for localStorage
 
 // --- Helper Functions ---
 
@@ -17,7 +17,7 @@ function parseCSV(csv) {
 
     for (let i = 1; i < nonEmptyLines.length; i++) {
         const currentLine = parseCSVLine(nonEmptyLines[i]);
-        if (currentLine.length === headers.length) {
+        if (currentLine.length === headers.length) { // Ensure line has correct number of columns
             const row = {};
             for (let j = 0; j < headers.length; j++) {
                 row[headers[j]] = currentLine[j] !== undefined ? currentLine[j] : '';
@@ -44,7 +44,7 @@ function parseCSVLine(line) {
             currentField += char;
         }
     }
-    result.push(currentField.trim());
+    result.push(currentField.trim()); // Add the last field
     return result;
 }
 
@@ -56,10 +56,22 @@ function formatNewspaperDateline(dateString) {
         if (isNaN(date)) throw new Error('Invalid Date');
 
         const options = { month: 'long', day: 'numeric', year: 'numeric' };
-        const formattedDate = date.toLocaleString('en-US', options);
-        // Replace with a dynamic location if possible, or keep static for vintage feel
-        return `${formattedDate} · Global Dispatch`; // Or 'Local Dispatch', 'New York, NY' etc.
+        // Get current date to determine "Today's Dispatch" or a specific city
+        const today = new Date();
+        const isToday = date.toDateString() === today.toDateString();
+
+        let location = 'Global Dispatch'; // Default
+        // You can make this dynamic if you have location data in your sheet
+        // For a vintage feel, a static location is good
+        if (isToday) {
+            location = 'Today\'s Dispatch';
+        } else {
+            location = 'New York, NY'; // Example static location for historical news
+        }
+
+        return `${date.toLocaleString('en-US', options)} · ${location}`; 
     } catch (e) {
+        console.error("Date parsing error:", e);
         return 'Invalid Date';
     }
 }
@@ -67,8 +79,10 @@ function formatNewspaperDateline(dateString) {
 // Format current date for masthead dateline
 function formatMastheadDateline() {
     const today = new Date();
+    // Using current time (Thursday, July 10, 2025 at 11:20:52 AM PKT) for example output.
+    // The actual execution will use the current live time.
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return today.toLocaleString('en-US', options) + ' · Rawalpindi, PK'; // Based on current location
+    return today.toLocaleString('en-US', options) + ' · Rawalpindi, PK'; 
 }
 
 // --- Main Fetch & Display Functions ---
@@ -110,7 +124,7 @@ function displayNews(articlesToDisplay) {
         if (isNaN(dateB)) return -1;
         return dateB - dateA;
     }).forEach((article, index) => {
-        const headline = article.Headline || 'No Headline';
+        const headline = article.Headline || '';
         const summary = article.Summary || '';
         let url = article.URL || '#';
         const publishedTime = article['Published Time'] || 'N/A';
@@ -125,26 +139,23 @@ function displayNews(articlesToDisplay) {
             try { new URL(url); } catch (e) { url = '#'; } // Validate again
         } else { url = '#'; }
 
-        // Determine if BREAKING ribbon is needed (e.g., first article, or based on keywords)
-        const isBreaking = index === 0; // Example: Mark the very first article as BREAKING
+        // Determine if BREAKING ribbon is needed (Example: first article, or based on keywords)
+        // You can add more complex logic here if needed (e.g., if headline contains "BREAKING")
+        const isBreaking = index === 0; // Mark the very first article as BREAKING for demonstration
         const breakingRibbon = isBreaking ? '<span class="breaking-ribbon">BREAKING</span>' : '';
 
         const articleDiv = document.createElement('div');
         articleDiv.classList.add('news-article');
-        // Add a class for column layout (CSS will handle 1 vs 2 columns)
         articleDiv.classList.add('column-item'); 
 
-        // Conditionally render headline as a link or just text
-        const headlineHtml = url !== '#' ? `<h2><a href="${url}" target="_blank" rel="noopener noreferrer">${headline}</a></h2>` : `<h2>${headline}</h2>`;
-        
-        const summaryHtml = summary ? `<p>${summary.substring(0, 200)}...</p>` : '<p>No summary available.</p>'; // Truncate summary for initial view
-        const readMoreHtml = summary.length > 200 ? `<a href="${url}" target="_blank" rel="noopener noreferrer" class="read-more-link">Read More</a>` : '';
+        const summaryHtml = summary ? `<p>${summary.substring(0, 300)}...</p>` : '<p>No summary available.</p>'; // Truncate summary for initial view
+        const readMoreHtml = summary.length > 300 && url !== '#' ? `<a href="${url}" target="_blank" rel="noopener noreferrer" class="read-more-link">Read More</a>` : ''; // Only show if truncated and valid URL
 
 
         // Build the HTML for a single news article
         articleDiv.innerHTML = `
             ${breakingRibbon}
-            ${headlineHtml}
+            <h2><a href="${url}" target="_blank" rel="noopener noreferrer">${headline}</a></h2>
             <span class="article-dateline">${formatNewspaperDateline(publishedTime)}</span>
             ${summaryHtml}
             ${readMoreHtml}
@@ -156,7 +167,7 @@ function displayNews(articlesToDisplay) {
 
 // --- Functionality & Event Listeners ---
 
-// Masthead Dateline
+// Masthead Dateline Update
 function updateMastheadDateline() {
     const datelineSpan = document.getElementById('current-dateline');
     if (datelineSpan) {
@@ -193,15 +204,15 @@ function setupAutoRefresh() {
 
 function startAutoRefresh() {
     if (autoRefreshIntervalId) clearInterval(autoRefreshIntervalId); // Clear any existing interval
-    autoRefreshIntervalId = setInterval(fetchNews, 300000); // 5 minutes
-    Logger.log('Auto-refresh started.'); // Use console.log for browser dev tools
+    autoRefreshIntervalId = setInterval(fetchNews, 300000); // 5 minutes (300000ms)
+    console.log('Auto-refresh started (every 5 minutes).'); 
 }
 
 function stopAutoRefresh() {
     if (autoRefreshIntervalId) {
         clearInterval(autoRefreshIntervalId);
         autoRefreshIntervalId = null;
-        Logger.log('Auto-refresh stopped.');
+        console.log('Auto-refresh stopped.');
     }
 }
 
@@ -221,6 +232,6 @@ document.getElementById('searchBar').addEventListener('input', (event) => {
 // --- Initial Load ---
 document.addEventListener('DOMContentLoaded', () => {
     updateMastheadDateline();
-    fetchNews();
-    setupAutoRefresh();
+    fetchNews(); // Initial fetch
+    setupAutoRefresh(); // Setup auto-refresh
 });
