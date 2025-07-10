@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trader's News Dashboard</title>
-    <link rel="stylesheet" href="style.css?v=5"> <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=6"> <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="dashboard-wrapper">
@@ -13,7 +13,9 @@
             <button id="refreshButton">Refresh News</button>
         </div>
         <main id="news-container">
-            <p>Loading news...</p>
+            <div id="news-columns" class="news-columns-container">
+                <p>Loading news...</p>
+            </div>
         </main>
     </div>
     <footer>
