@@ -22,7 +22,7 @@ body {
     flex-grow: 1; /* Allow it to take up available vertical space */
 }
 
-/* Dashboard Header Section (now inside the widget, no logo here) */
+/* Dashboard Header Section (inside the widget, no logo here) */
 .dashboard-header-section {
     background-color: #000; /* Pure black header for this section */
     color: #fff;
@@ -33,7 +33,6 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
 }
 
-/* No .header-left styling needed here anymore for logo sizing */
 .dashboard-header-section h1 {
     margin: 0;
     font-size: 2rem;
@@ -59,30 +58,57 @@ body {
     transform: translateY(-2px); /* Slight lift effect */
 }
 
-/* Main Content Area (for news articles) */
+/* Main Content Area (for news articles) - NOW SCROLLABLE */
 main {
     padding: 20px; /* Padding inside the news content area */
+    max-height: 70vh; /* Set a maximum height relative to viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
-/* News Article Styling */
+/* Scrollbar styling for dark theme */
+main::-webkit-scrollbar {
+    width: 8px;
+}
+main::-webkit-scrollbar-track {
+    background: #333; /* Darker track */
+    border-radius: 10px;
+}
+main::-webkit-scrollbar-thumb {
+    background: #555; /* Darker thumb */
+    border-radius: 10px;
+}
+main::-webkit-scrollbar-thumb:hover {
+    background: #777; /* Lighter thumb on hover */
+}
+
+
+/* News Article Styling - NOW CARD-BASED */
 .news-article {
-    border-bottom: 1px solid #444; /* Darker separator */
-    padding: 15px 0; /* Reduced padding slightly for compactness */
-    transition: background-color 0.2s ease;
+    background-color: #333; /* Slightly lighter background for the card */
+    margin-bottom: 15px; /* Space between cards */
+    padding: 15px; /* Padding inside the card */
+    border-radius: 5px; /* Subtle rounded corners for cards */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Card shadow */
+    border: 1px solid #444; /* Subtle border */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .news-article:hover {
-    background-color: #3a3a3a; /* Slightly lighter on hover */
+    transform: translateY(-2px); /* Lift effect on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Enhanced shadow on hover */
 }
 
 .news-article:last-child {
-    border-bottom: none;
+    margin-bottom: 0; /* No bottom margin for the last card */
+    border-bottom: none; /* No extra border for the last card */
 }
 
 .news-article h2 {
     margin-top: 0;
     margin-bottom: 8px;
-    font-size: 1.4rem; /* Slightly smaller headlines */
+    font-size: 1.4rem;
+    line-height: 1.3; /* Tighter line height for headlines */
 }
 
 .news-article h2 a {
@@ -97,18 +123,19 @@ main {
 }
 
 .news-article p {
-    font-size: 0.95rem; /* Slightly smaller summary text */
+    font-size: 0.9rem; /* Slightly smaller summary text */
     color: #b0b0b0; /* Lighter gray for summary */
+    line-height: 1.5; /* Good line height for summary */
     margin-bottom: 10px;
 }
 
 .news-meta {
-    font-size: 0.8rem; /* Smaller meta info */
+    font-size: 0.75rem; /* Even smaller meta info */
     color: #888; /* Even lighter gray for meta info */
     margin-top: 10px;
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    gap: 10px; /* Reduced space between meta items */
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .news-meta span {
@@ -119,7 +146,7 @@ main {
 /* Footer */
 footer {
     text-align: center;
-    padding: 1rem 0; /* Reduced footer padding */
+    padding: 1rem 0;
     color: #888;
     font-size: 0.8rem;
     margin-top: auto; /* Push footer to bottom if content is short */
@@ -128,13 +155,13 @@ footer {
 
 /* Logo in Footer Styling */
 .footer-logo-container {
-    margin-bottom: 10px; /* Space below logo */
+    margin-bottom: 10px;
 }
 
 .footer-logo {
-    height: 40px; /* ADJUSTED HEIGHT FOR LOGO */
-    width: auto; /* Maintain aspect ratio */
-    border-radius: 0; /* Ensure no rounding */
-    border: none; /* No border for the logo in the footer */
-    vertical-align: middle; /* Align with text if text is beside it */
+    height: 40px;
+    width: auto;
+    border-radius: 0;
+    border: none;
+    vertical-align: middle;
 }
