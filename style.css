@@ -74,28 +74,22 @@ body {
 /* Main Content Area (for news articles) */
 main {
     padding: 20px;
-    /* Reverted: Remove overflow: hidden from main. Its height will be determined by #news-columns */
-    /* Reverted: Remove max-height from main. It should allow its child to define its height */
-    -webkit-overflow-scrolling: touch; /* This is fine here for overall touch behavior */
+    /* Removed height/overflow properties here - main will adapt */
 }
 
-/* News Columns Container - This is the actual scrollable element now */
+/* News Columns Container - This is the actual scrollable element */
 #news-columns {
-    /* NEW: Apply max-height and overflow-y directly to this element */
-    max-height: 70vh; /* Set the maximum height for the scrollable area */
+    max-height: 500px; /* TEMPORARY: Fixed pixel height to force scrolling for testing */
     overflow-y: scroll; /* Enable vertical scrolling */
-    
-    /* Reverted: Remove width calc and padding-right hack for cleaner layout */
-    width: auto; /* Let it take natural width */
-    padding-right: 0; /* Remove explicit padding */
-    box-sizing: border-box; /* Keep default */
-
-    /* Mobile scrolling fix */
-    touch-action: pan-y; /* Allows vertical scrolling gestures to be handled by this element */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    touch-action: pan-y; /* Critical for mobile scrolling within nested elements */
 
     /* Scrollbar hiding for cross-browser support */
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
+    width: auto; /* Ensure it takes natural width */
+    padding-right: 0; /* No extra padding for scrollbar hiding hack */
+    box-sizing: border-box; /* Standard box model */
 }
 
 /* WebKit-specific scrollbar hiding for #news-columns */
@@ -299,10 +293,11 @@ footer {
     }
     main {
         padding: 15px; /* Adjust main padding for mobile */
-        max-height: 75vh; /* Adjust max height for mobile */
+        /* Removed max-height from here for mobile */
     }
-    /* Removed specific #news-columns width/padding-right for mobile to avoid conflicts */
+    /* Adjusted #news-columns for mobile */
     #news-columns {
+        max-height: 75vh; /* Adjusted max height for mobile scroll */
         width: auto;
         padding-right: 0;
     }
