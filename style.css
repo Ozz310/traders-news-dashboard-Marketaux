@@ -9,6 +9,7 @@ body {
     display: flex; /* For centering the main dashboard */
     flex-direction: column;
     min-height: 100vh; /* Ensure footer stays at bottom */
+    overflow-x: hidden; /* Prevent horizontal scroll on small screens */
 }
 
 /* Dashboard Wrapper - The main widget container */
@@ -17,9 +18,11 @@ body {
     margin: 30px auto; /* Center it horizontally with top/bottom margin */
     background-color: #2a2a2a; /* Darker background for content box */
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    border-radius: 0; /* No rounded corners for the entire widget */
+    border-radius: 8px; /* Added subtle rounded corners for the entire widget */
     overflow: hidden; /* Contain content */
     flex-grow: 1; /* Allow it to take up available vertical space */
+    display: flex; /* Use flex for internal layout of header and main */
+    flex-direction: column;
 }
 
 /* Dashboard Header Section - Contains logo, title (no controls) */
@@ -44,6 +47,7 @@ body {
     width: auto;
     border-radius: 50%; /* Make it circular if preferred */
     border: 2px solid #ffd700; /* Gold border */
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5); /* Subtle glow for logo */
 }
 
 .dashboard-header-section h1 {
@@ -52,6 +56,7 @@ body {
     color: #ffd700; /* Gold heading */
     letter-spacing: 0.05em; /* Spacing for premium feel */
     white-space: nowrap; /* Prevent title from wrapping */
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); /* Subtle text glow */
 }
 
 /* Main Content Area (for news articles) - SCROLLABLE */
@@ -84,20 +89,51 @@ main::-webkit-scrollbar-thumb:hover {
     background-color: #333; /* Slightly lighter background for the card */
     margin-bottom: 15px; /* Space between cards */
     padding: 15px; /* Padding inside the card */
-    border-radius: 5px; /* Subtle rounded corners for cards */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Card shadow */
+    border-radius: 8px; /* More rounded corners for cards */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Enhanced card shadow */
     border: 1px solid #444; /* Subtle border */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative; /* For breaking ribbon positioning */
+
+    /* Flexbox for internal layout (image + text) */
+    display: flex;
+    flex-direction: column; /* Default to column on small screens */
+    gap: 15px; /* Space between image and text content */
+    align-items: flex-start; /* Align items to the start */
 }
 
 .news-article:hover {
-    transform: translateY(-2px); /* Lift effect on hover */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Enhanced shadow on hover */
+    transform: translateY(-3px); /* Lift effect on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow on hover */
 }
 
 .news-article:last-child {
     margin-bottom: 0; /* No bottom margin for the last card */
-    border-bottom: none; /* No extra border for the last card */
+}
+
+/* Image Styling */
+.article-image-container {
+    width: 100%; /* Full width on small screens */
+    height: 200px; /* Fixed height for consistency */
+    overflow: hidden; /* Hide overflowing parts of the image */
+    border-radius: 6px; /* Rounded corners for the image container */
+    flex-shrink: 0; /* Prevent image container from shrinking */
+    background-color: #444; /* Placeholder background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.article-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the container, cropping if necessary */
+    display: block;
+    transition: transform 0.3s ease; /* Smooth zoom on hover */
+}
+
+.news-article:hover .article-image {
+    transform: scale(1.05); /* Slight zoom effect on image hover */
 }
 
 .news-article h2 {
@@ -125,18 +161,66 @@ main::-webkit-scrollbar-thumb:hover {
     margin-bottom: 10px;
 }
 
+.article-dateline {
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 10px;
+    display: block; /* Ensure it takes its own line */
+}
+
 .news-meta {
     font-size: 0.75rem; /* Even smaller meta info */
     color: #888; /* Even lighter gray for meta info */
-    margin-top: 10px;
+    margin-top: 5px; /* Reduced margin */
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    padding-top: 5px; /* Small padding top */
+    border-top: 1px solid rgba(255, 215, 0, 0.1); /* Subtle gold separator */
 }
 
 .news-meta span {
     display: flex;
     align-items: center;
+    background-color: #444; /* Background for ticker tags */
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: #ffd700; /* Gold text for tickers */
+    font-weight: bold;
+}
+
+/* Read More Link */
+.news-article a[target="_blank"]:not(h2 a) { /* Target only the Read More link */
+    display: inline-block;
+    margin-top: 10px;
+    color: #ffd700; /* Gold color */
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid #ffd700;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.news-article a[target="_blank"]:not(h2 a):hover {
+    background-color: #ffd700;
+    color: #1a1a1a; /* Dark text on gold hover */
+}
+
+/* Breaking News Ribbon */
+.breaking-ribbon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ff0000; /* Bright red for breaking news */
+    color: #fff;
+    padding: 5px 15px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-bottom-left-radius: 8px; /* Rounded corner */
+    z-index: 10; /* Ensure it's above other content */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 /* Footer */
@@ -149,19 +233,35 @@ footer {
     background-color: #1a1a1a; /* Match body background */
 }
 
-/* Footer logo container - STYLES REMOVED as logo is gone from footer */
-
-
 /* --- Responsive Adjustments --- */
 @media (min-width: 768px) {
-    /* No column specific grid template in this version. Articles stack. */
+    .news-article {
+        flex-direction: row; /* Image on left, text on right */
+        align-items: center; /* Vertically align items in the middle */
+    }
+
+    .article-image-container {
+        width: 250px; /* Fixed width for image on larger screens */
+        height: 150px; /* Adjusted height for better aspect ratio in row layout */
+        margin-right: 20px; /* Space between image and text */
+        flex-shrink: 0; /* Prevent shrinking */
+    }
+
+    .news-article h2 {
+        font-size: 1.5rem; /* Slightly larger headlines on desktop */
+    }
 }
 
 @media (max-width: 600px) {
+    .dashboard-wrapper {
+        margin: 15px auto; /* Smaller margins on mobile */
+        border-radius: 0; /* No rounded corners on very small screens for full width */
+    }
     .dashboard-header-section {
         flex-direction: column;
         align-items: center;
         gap: 10px;
+        padding: 1rem;
     }
     .header-masthead-group {
         flex-direction: column;
@@ -169,13 +269,34 @@ footer {
         gap: 5px;
     }
     .dashboard-header-section h1 {
-        font-size: 1.8rem; /* Smaller title on mobile */
+        font-size: 1.5rem; /* Smaller title on mobile */
         white-space: normal; /* Allow wrapping */
-    }
-    .newspaper-container {
-        margin: 10px;
+        text-align: center;
     }
     main {
-        padding: 1rem;
+        padding: 15px;
+        max-height: 75vh; /* Adjust max height for mobile */
+    }
+    .news-article {
+        padding: 10px; /* Smaller padding for cards on mobile */
+        flex-direction: column; /* Ensure column layout on mobile */
+        gap: 10px;
+    }
+    .article-image-container {
+        width: 100%;
+        height: 180px; /* Adjust height for mobile images */
+    }
+    .news-article h2 {
+        font-size: 1.2rem;
+    }
+    .news-article p {
+        font-size: 0.85rem;
+    }
+    .article-dateline, .news-meta {
+        font-size: 0.7rem;
+    }
+    .breaking-ribbon {
+        padding: 3px 10px;
+        font-size: 0.65rem;
     }
 }
