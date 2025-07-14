@@ -74,31 +74,33 @@ body {
 /* Main Content Area (for news articles) */
 main {
     padding: 20px;
-    max-height: 70vh; /* Sets the maximum height for the *visible* area */
-    overflow: hidden; /* Hides any scrollbar from 'main' itself */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    /* Reverted: Remove overflow: hidden from main. Its height will be determined by #news-columns */
+    /* Reverted: Remove max-height from main. It should allow its child to define its height */
+    -webkit-overflow-scrolling: touch; /* This is fine here for overall touch behavior */
 }
 
 /* News Columns Container - This is the actual scrollable element now */
 #news-columns {
-    height: 100%; /* Allows it to fill the height of its parent 'main' */
-    overflow-y: scroll; /* Enables vertical scrolling within this container */
-    /* Hides the scrollbar by pushing it out of view */
-    width: calc(100% + 17px); /* Adds common scrollbar width to prevent content reflow */
-    padding-right: 17px; /* Pushes content to the left, hiding the scrollbar on the right */
-    box-sizing: border-box; /* Ensures padding is included in the width calculation */
+    /* NEW: Apply max-height and overflow-y directly to this element */
+    max-height: 70vh; /* Set the maximum height for the scrollable area */
+    overflow-y: scroll; /* Enable vertical scrolling */
+    
+    /* Reverted: Remove width calc and padding-right hack for cleaner layout */
+    width: auto; /* Let it take natural width */
+    padding-right: 0; /* Remove explicit padding */
+    box-sizing: border-box; /* Keep default */
 
-    /* NEW: Critical for mobile scrolling within nested elements */
+    /* Mobile scrolling fix */
     touch-action: pan-y; /* Allows vertical scrolling gestures to be handled by this element */
 
-    /* Cross-browser scrollbar hiding */
+    /* Scrollbar hiding for cross-browser support */
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
 }
 
 /* WebKit-specific scrollbar hiding for #news-columns */
 #news-columns::-webkit-scrollbar {
-    width: 0px; /* Chrome, Safari, Opera */
+    width: 0px; /* Chrome, Safari, Opera - Attempts to hide the scrollbar visually */
     background: transparent;
 }
 #news-columns::-webkit-scrollbar-track {
@@ -296,13 +298,13 @@ footer {
         text-align: center;
     }
     main {
-        padding: 15px;
+        padding: 15px; /* Adjust main padding for mobile */
         max-height: 75vh; /* Adjust max height for mobile */
     }
-    /* Adjusted #news-columns for mobile to ensure scrollbar remains hidden */
+    /* Removed specific #news-columns width/padding-right for mobile to avoid conflicts */
     #news-columns {
-        width: calc(100% + 15px); /* Adjusted slightly for mobile viewports */
-        padding-right: 15px;
+        width: auto;
+        padding-right: 0;
     }
     .news-article {
         padding: 10px; /* Smaller padding for cards on mobile */
