@@ -95,11 +95,7 @@ main::-webkit-scrollbar-thumb:hover {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative; /* For breaking ribbon positioning */
 
-    /* Flexbox for internal layout (image + text) */
-    display: flex;
-    flex-direction: column; /* Default to column on small screens */
-    gap: 15px; /* Space between image and text content */
-    align-items: flex-start; /* Align items to the start */
+    /* Reverted: Removed flexbox for internal layout (image + text) */
 }
 
 .news-article:hover {
@@ -111,30 +107,9 @@ main::-webkit-scrollbar-thumb:hover {
     margin-bottom: 0; /* No bottom margin for the last card */
 }
 
-/* Image Styling */
-.article-image-container {
-    width: 100%; /* Full width on small screens */
-    height: 200px; /* Fixed height for consistency */
-    overflow: hidden; /* Hide overflowing parts of the image */
-    border-radius: 6px; /* Rounded corners for the image container */
-    flex-shrink: 0; /* Prevent image container from shrinking */
-    background-color: #444; /* Placeholder background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.article-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Cover the container, cropping if necessary */
-    display: block;
-    transition: transform 0.3s ease; /* Smooth zoom on hover */
-}
-
-.news-article:hover .article-image {
-    transform: scale(1.05); /* Slight zoom effect on image hover */
-}
+/* Removed: Image Styling */
+/* .article-image-container { ... } */
+/* .article-image { ... } */
 
 .news-article h2 {
     margin-top: 0;
@@ -235,21 +210,8 @@ footer {
 
 /* --- Responsive Adjustments --- */
 @media (min-width: 768px) {
-    .news-article {
-        flex-direction: row; /* Image on left, text on right */
-        align-items: center; /* Vertically align items in the middle */
-    }
-
-    .article-image-container {
-        width: 250px; /* Fixed width for image on larger screens */
-        height: 150px; /* Adjusted height for better aspect ratio in row layout */
-        margin-right: 20px; /* Space between image and text */
-        flex-shrink: 0; /* Prevent shrinking */
-    }
-
-    .news-article h2 {
-        font-size: 1.5rem; /* Slightly larger headlines on desktop */
-    }
+    /* Reverted: Removed flex-direction: row for .news-article */
+    /* Reverted: Removed .article-image-container specific desktop styles */
 }
 
 @media (max-width: 600px) {
@@ -282,10 +244,7 @@ footer {
         flex-direction: column; /* Ensure column layout on mobile */
         gap: 10px;
     }
-    .article-image-container {
-        width: 100%;
-        height: 180px; /* Adjust height for mobile images */
-    }
+    /* Removed: article-image-container mobile styles */
     .news-article h2 {
         font-size: 1.2rem;
     }
