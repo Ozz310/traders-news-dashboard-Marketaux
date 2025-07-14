@@ -53,14 +53,17 @@ body {
     border: 2px solid #F0D788; /* Subtle light gold border */
     /* Refined glow for a more sophisticated look without animation */
     box-shadow: 0 0 10px rgba(240, 215, 136, 0.6), inset 0 0 5px rgba(240, 215, 136, 0.3);
-    /* REMOVED: transition: transform 0.3s ease; */
+    /* REMOVED: transition: transform 0.3s ease; - This was causing the unwanted load effect */
+    /* Now, only hover effects will have transitions */
 }
 
 .header-logo-top:hover {
-    /* REMOVED: transform: scale(1.05); */
-    /* You can add a different, non-transform hover effect here if desired, e.g., a slight increase in box-shadow intensity */
+    /* Only box-shadow change on hover for a subtle interaction */
     box-shadow: 0 0 12px rgba(240, 215, 136, 0.8), inset 0 0 6px rgba(240, 215, 136, 0.4);
+    /* Added a specific transition for the box-shadow on hover for smoothness */
+    transition: box-shadow 0.3s ease;
 }
+
 
 .dashboard-header-section h1 {
     margin: 0;
