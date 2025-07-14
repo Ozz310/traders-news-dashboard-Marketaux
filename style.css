@@ -92,29 +92,27 @@ main::-webkit-scrollbar-thumb:hover {
     border-radius: 8px; /* More rounded corners for cards */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Enhanced card shadow */
     border: 1px solid #444; /* Subtle border */
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; /* Added border-color transition */
     position: relative; /* For breaking ribbon positioning */
-
-    /* Reverted: Removed flexbox for internal layout (image + text) */
+    /* Added subtle gold bottom border */
+    border-bottom: 1px solid rgba(255, 215, 0, 0.15); /* Subtle gold line at bottom */
 }
 
 .news-article:hover {
     transform: translateY(-3px); /* Lift effect on hover */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.2); /* Enhanced shadow + subtle gold glow on hover */
+    border-color: #ffd700; /* Gold border on hover */
 }
 
 .news-article:last-child {
     margin-bottom: 0; /* No bottom margin for the last card */
+    border-bottom: none; /* No bottom border for the last card */
 }
-
-/* Removed: Image Styling */
-/* .article-image-container { ... } */
-/* .article-image { ... } */
 
 .news-article h2 {
     margin-top: 0;
     margin-bottom: 8px;
-    font-size: 1.4rem;
+    font-size: 1.4rem; /* Headline size */
     line-height: 1.3; /* Tighter line height for headlines */
 }
 
@@ -122,6 +120,7 @@ main::-webkit-scrollbar-thumb:hover {
     text-decoration: none;
     color: #ffd700; /* Gold link for headlines */
     transition: color 0.2s ease;
+    font-weight: 700; /* Make headlines bolder */
 }
 
 .news-article h2 a:hover {
@@ -130,56 +129,64 @@ main::-webkit-scrollbar-thumb:hover {
 }
 
 .news-article p {
-    font-size: 0.9rem; /* Slightly smaller summary text */
-    color: #b0b0b0; /* Lighter gray for summary */
-    line-height: 1.5; /* Good line height for summary */
+    font-size: 0.95rem; /* Slightly larger summary text */
+    color: #c0c0c0; /* Slightly lighter gray for summary */
+    line-height: 1.6; /* Good line height for summary */
     margin-bottom: 10px;
+    /* For cleaner truncation if content is too long */
+    /* max-height: 4.8em; /* Roughly 3 lines if font-size is 1em and line-height 1.6 */
+    /* overflow: hidden; */
+    /* text-overflow: ellipsis; */
 }
 
 .article-dateline {
-    font-size: 0.8rem;
-    color: #999;
+    font-size: 0.85rem; /* Slightly larger dateline */
+    color: #a0a0a0; /* Slightly lighter gray for dateline */
     margin-bottom: 10px;
     display: block; /* Ensure it takes its own line */
+    font-style: italic; /* Subtle italic for dateline */
 }
 
 .news-meta {
     font-size: 0.75rem; /* Even smaller meta info */
     color: #888; /* Even lighter gray for meta info */
-    margin-top: 5px; /* Reduced margin */
+    margin-top: 10px; /* Adjusted margin */
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    padding-top: 5px; /* Small padding top */
-    border-top: 1px solid rgba(255, 215, 0, 0.1); /* Subtle gold separator */
+    gap: 8px; /* Slightly smaller gap between tags */
+    padding-top: 8px; /* Small padding top */
+    border-top: 1px solid rgba(255, 215, 0, 0.2); /* Slightly stronger gold separator */
 }
 
 .news-meta span {
     display: flex;
     align-items: center;
-    background-color: #444; /* Background for ticker tags */
-    padding: 3px 8px;
-    border-radius: 4px;
+    background-color: rgba(255, 215, 0, 0.08); /* Very subtle gold background for tags */
+    padding: 4px 10px; /* Adjusted padding for tags */
+    border-radius: 15px; /* More rounded/pill-shaped tags */
     color: #ffd700; /* Gold text for tickers */
     font-weight: bold;
+    border: 1px solid rgba(255, 215, 0, 0.3); /* Subtle gold border for tags */
 }
 
-/* Read More Link */
-.news-article a[target="_blank"]:not(h2 a) { /* Target only the Read More link */
+/* Read More Link (now styled as a button) */
+.news-article a.read-more-button { /* Added class for targeting */
     display: inline-block;
-    margin-top: 10px;
+    margin-top: 15px; /* More space above button */
     color: #ffd700; /* Gold color */
     text-decoration: none;
     font-weight: bold;
     border: 1px solid #ffd700;
-    padding: 5px 10px;
+    padding: 8px 15px; /* More padding for button feel */
     border-radius: 5px;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(255, 215, 0, 0.1); /* Subtle glow */
 }
 
-.news-article a[target="_blank"]:not(h2 a):hover {
+.news-article a.read-more-button:hover {
     background-color: #ffd700;
     color: #1a1a1a; /* Dark text on gold hover */
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4); /* Enhanced glow on hover */
 }
 
 /* Breaking News Ribbon */
@@ -187,14 +194,14 @@ main::-webkit-scrollbar-thumb:hover {
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #ff0000; /* Bright red for breaking news */
+    background-color: #e74c3c; /* A slightly softer red */
     color: #fff;
     padding: 5px 15px;
     font-size: 0.75rem;
     font-weight: bold;
     text-transform: uppercase;
     border-bottom-left-radius: 8px; /* Rounded corner */
-    z-index: 10; /* Ensure it's above other content */
+    z-index: 10;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
@@ -208,12 +215,39 @@ footer {
     background-color: #1a1a1a; /* Match body background */
 }
 
-/* --- Responsive Adjustments --- */
-@media (min-width: 768px) {
-    /* Reverted: Removed flex-direction: row for .news-article */
-    /* Reverted: Removed .article-image-container specific desktop styles */
+/* --- Skeleton Loader Styles --- */
+.skeleton-wrapper {
+    display: block; /* Script will toggle this */
+    padding: 20px;
+}
+.skeleton-article {
+    background-color: #333;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    animation: pulse 1.5s infinite ease-in-out;
+}
+.skeleton-line {
+    height: 1em; /* Approx line height */
+    background-color: #444;
+    margin-bottom: 0.7em; /* Space between lines */
+    border-radius: 4px;
+}
+.skeleton-line.short { width: 60%; }
+.skeleton-line.medium { width: 80%; }
+.skeleton-line.long { width: 100%; }
+.skeleton-line:last-child { margin-bottom: 0; } /* No margin on last line */
+
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
 }
 
+
+/* --- Responsive Adjustments --- */
 @media (max-width: 600px) {
     .dashboard-wrapper {
         margin: 15px auto; /* Smaller margins on mobile */
@@ -241,10 +275,8 @@ footer {
     }
     .news-article {
         padding: 10px; /* Smaller padding for cards on mobile */
-        flex-direction: column; /* Ensure column layout on mobile */
         gap: 10px;
     }
-    /* Removed: article-image-container mobile styles */
     .news-article h2 {
         font-size: 1.2rem;
     }
@@ -257,5 +289,12 @@ footer {
     .breaking-ribbon {
         padding: 3px 10px;
         font-size: 0.65rem;
+    }
+    .news-meta span {
+        padding: 3px 8px; /* Smaller padding for mobile tags */
+    }
+    .news-article a.read-more-button {
+        padding: 6px 12px; /* Smaller button on mobile */
+        font-size: 0.85rem;
     }
 }
