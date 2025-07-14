@@ -29,34 +29,43 @@ body {
 .dashboard-header-section {
     background-color: #000; /* Pure black header for this section */
     color: #fff;
-    padding: 1rem 2rem;
-    display: flex; /* Changed to flex for centering */
-    justify-content: center; /* Center horizontally now */
+    padding: 1.5rem 2rem 1.2rem; /* Increased vertical padding for more breathing room */
+    display: flex;
+    justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    /* Added more prominent shadow for clear separation */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    /* Subtle gold border at the bottom of the header */
+    border-bottom: 2px solid #ffd700;
 }
 
 .header-masthead-group { /* Wrapper for logo and title */
     display: flex;
-    align-items: center;
-    gap: 15px; /* Space between logo and title */
+    flex-direction: column; /* Stack logo above title */
+    align-items: center; /* Center horizontally */
+    gap: 10px; /* Space between logo and title */
 }
 
 .header-logo-top { /* Styling for the logo at the very top */
-    height: 45px; /* Adjust size as needed */
+    height: 70px; /* INCREASED SIZE FOR PROMINENCE */
     width: auto;
-    border-radius: 50%; /* Make it circular if preferred */
-    border: 2px solid #ffd700; /* Gold border */
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5); /* Subtle glow for logo */
+    border-radius: 50%;
+    border: 3px solid #ffd700; /* Slightly thicker gold border */
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), inset 0 0 10px rgba(255, 215, 0, 0.4); /* Stronger glow and inner glow */
+    transition: transform 0.3s ease; /* Add transition for hover effect */
+}
+
+.header-logo-top:hover {
+    transform: scale(1.05); /* Subtle zoom effect on hover */
 }
 
 .dashboard-header-section h1 {
     margin: 0;
-    font-size: 2rem;
+    font-size: 2.2rem; /* Slightly increased font size for title */
     color: #ffd700; /* Gold heading */
-    letter-spacing: 0.05em; /* Spacing for premium feel */
+    letter-spacing: 0.08em; /* Slightly more letter spacing */
     white-space: nowrap; /* Prevent title from wrapping */
-    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); /* Subtle text glow */
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5); /* Stronger text glow */
 }
 
 /* Main Content Area (for news articles) - SCROLLABLE */
@@ -133,10 +142,6 @@ main::-webkit-scrollbar-thumb:hover {
     color: #c0c0c0; /* Slightly lighter gray for summary */
     line-height: 1.6; /* Good line height for summary */
     margin-bottom: 10px;
-    /* For cleaner truncation if content is too long */
-    /* max-height: 4.8em; /* Roughly 3 lines if font-size is 1em and line-height 1.6 */
-    /* overflow: hidden; */
-    /* text-overflow: ellipsis; */
 }
 
 .article-dateline {
@@ -217,7 +222,7 @@ footer {
 
 /* --- Skeleton Loader Styles --- */
 .skeleton-wrapper {
-    display: block; /* Script will toggle this */
+    display: none; /* Hidden by default, script will show it */
     padding: 20px;
 }
 .skeleton-article {
@@ -256,16 +261,19 @@ footer {
     .dashboard-header-section {
         flex-direction: column;
         align-items: center;
-        gap: 10px;
-        padding: 1rem;
+        gap: 8px; /* Adjusted gap for mobile */
+        padding: 0.8rem; /* Reduced padding for mobile header */
     }
     .header-masthead-group {
         flex-direction: column;
         text-align: center;
         gap: 5px;
     }
+    .header-logo-top {
+        height: 60px; /* Slightly smaller logo on mobile */
+    }
     .dashboard-header-section h1 {
-        font-size: 1.5rem; /* Smaller title on mobile */
+        font-size: 1.8rem; /* Smaller title on mobile */
         white-space: normal; /* Allow wrapping */
         text-align: center;
     }
