@@ -119,7 +119,7 @@ function displayNews(articlesToDisplay) {
         let url = article.URL || '#';
         const publishedTime = article['Published Time'] || 'N/A';
         const tickers = article.Tickers || 'N/A';
-        const imageUrl = article['Image URL'] || ''; // NEW: Extract Image URL
+        const imageUrl = article['Image URL'] || ''; // Still extract, but not used for display
 
         // URL Validation
         if (url !== '') {
@@ -140,15 +140,11 @@ function displayNews(articlesToDisplay) {
         const summaryHtml = summary ? `<p>${summary.substring(0, 300)}...</p>` : '<p>No summary available.</p>';
         const readMoreHtml = summary.length > 300 && url !== '#' ? `<a href="${url}" target="_blank" rel="noopener noreferrer">Read More</a>` : '';
 
-        // NEW: Image HTML
-        // Only include image if imageUrl is not empty
-        const imageHtml = imageUrl.trim() !== '' ? `<div class="article-image-container"><img src="${imageUrl}" alt="${headline}" class="article-image"></div>` : '';
-
+        // Removed: Image HTML generation
 
         // Build the HTML for a single news article
         articleDiv.innerHTML = `
             ${breakingRibbonHtml}
-            ${imageHtml} {/* Image added here */}
             <h2><a href="${url}" target="_blank" rel="noopener noreferrer">${headline}</a></h2>
             <span class="article-dateline">${formatNewspaperDateline(publishedTime)}</span>
             ${summaryHtml}
