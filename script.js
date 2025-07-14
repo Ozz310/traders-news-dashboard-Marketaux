@@ -71,34 +71,51 @@ function formatNewspaperDateline(dateString) {
 
 async function fetchNews() {
     const newsContainer = document.getElementById('news-columns');
+    const skeletonWrapper = document.querySelector('.skeleton-wrapper'); // Get skeleton wrapper
+
     if (!newsContainer) {
         console.error("Error: #news-columns element not found. Cannot load news.");
         return;
     }
-    newsContainer.innerHTML = '<p>Loading news...</p>'; // Loading message
+
+    // Show skeleton loader
+    if (skeletonWrapper) {
+        skeletonWrapper.style.display = 'block';
+    }
+    newsContainer.innerHTML = ''; // Clear previous content
 
     try {
         const response = await fetch(GOOGLE_SHEET_URL);
         const csvText = await response.text();
 
         const newsData = parseCSV(csvText);
-        // Filter out articles with empty headlines (or other critical missing data if needed)
         allNewsArticles = newsData.filter(article => article.Headline && article.Headline.trim() !== '');
         displayNews(allNewsArticles);
 
     } catch (error) {
         console.error('Error fetching news:', error);
         newsContainer.innerHTML = '<p>Failed to retrieve news. Please try refreshing.</p>';
+        if (skeletonWrapper) { // Hide skeleton if error
+            skeletonWrapper.style.display = 'none';
+        }
     }
 }
 
 function displayNews(articlesToDisplay) {
     const newsContainer = document.getElementById('news-columns');
+    const skeletonWrapper = document.querySelector('.skeleton-wrapper'); // Get skeleton wrapper
+
     if (!newsContainer) {
         console.error("Error: #news-columns element not found in displayNews.");
         return;
     }
-    newsContainer.innerHTML = ''; // Clear loading message
+
+    newsContainer.innerHTML = ''; // Clear everything, including skeleton if present
+
+    // Hide skeleton after news is loaded
+    if (skeletonWrapper) {
+        skeletonWrapper.style.display = 'none';
+    }
 
     if (articlesToDisplay.length === 0) {
         newsContainer.innerHTML = '<p>No news articles found.</p>';
@@ -138,9 +155,9 @@ function displayNews(articlesToDisplay) {
         articleDiv.classList.add('news-article');
 
         const summaryHtml = summary ? `<p>${summary.substring(0, 300)}...</p>` : '<p>No summary available.</p>';
-        const readMoreHtml = summary.length > 300 && url !== '#' ? `<a href="${url}" target="_blank" rel="noopener noreferrer">Read More</a>` : '';
+        // NEW: Add a class to the Read More link for specific button styling
+        const readMoreHtml = summary.length > 300 && url !== '#' ? `<a href="${url}" target="_blank" rel="noopener noreferrer" class="read-more-button">Read More</a>` : '';
 
-        // Removed: Image HTML generation
 
         // Build the HTML for a single news article
         articleDiv.innerHTML = `
@@ -157,8 +174,6 @@ function displayNews(articlesToDisplay) {
 
 // --- Functionality & Event Listeners (Simplified for removed elements) ---
 
-// NO REFRESH BUTTON LISTENER HERE as button is removed
-
 // Auto-Refresh: STARTING BY DEFAULT
 function startAutoRefresh() {
     if (autoRefreshIntervalId) clearInterval(autoRefreshIntervalId);
@@ -173,9 +188,6 @@ function stopAutoRefresh() { // This function is not called but remains for comp
         console.log('Auto-refresh stopped.');
     }
 }
-
-// NO SEARCH BAR LISTENER HERE as search bar is removed
-
 
 // --- Initial Load ---
 window.onload = () => {
