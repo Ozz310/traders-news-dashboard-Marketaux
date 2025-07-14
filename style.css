@@ -50,14 +50,16 @@ body {
     height: 70px; /* INCREASED SIZE FOR PROMINENCE */
     width: auto;
     border-radius: 50%;
-    /* REMOVED: Stronger gold border and intense glow */
     border: 2px solid #F0D788; /* Subtle light gold border */
-    box-shadow: 0 0 8px rgba(240, 215, 136, 0.4); /* Softer, lighter gold glow */
-    transition: transform 0.3s ease; /* Add transition for hover effect */
+    /* Refined glow for a more sophisticated look without animation */
+    box-shadow: 0 0 10px rgba(240, 215, 136, 0.6), inset 0 0 5px rgba(240, 215, 136, 0.3);
+    /* REMOVED: transition: transform 0.3s ease; */
 }
 
 .header-logo-top:hover {
-    transform: scale(1.05); /* Subtle zoom effect on hover */
+    /* REMOVED: transform: scale(1.05); */
+    /* You can add a different, non-transform hover effect here if desired, e.g., a slight increase in box-shadow intensity */
+    box-shadow: 0 0 12px rgba(240, 215, 136, 0.8), inset 0 0 6px rgba(240, 215, 136, 0.4);
 }
 
 .dashboard-header-section h1 {
@@ -129,7 +131,7 @@ main::-webkit-scrollbar-thumb:hover {
 
 .news-article h2 a {
     text-decoration: none;
-    color: #F0D788; /* Lighter gold link for headlines */
+    color: #F0D788; /* Light gold link for headlines */
     transition: color 0.2s ease;
     font-weight: 700; /* Make headlines bolder */
 }
