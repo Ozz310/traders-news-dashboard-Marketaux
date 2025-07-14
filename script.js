@@ -11,7 +11,10 @@ function parseCSV(csv) {
     const nonEmptyLines = lines.filter(line => line.trim() !== '');
     if (nonEmptyLines.length === 0) return [];
 
-    const headers = nonEmptyLines[0].split(',').map(header => header.trim());
+    // Assuming the first non-empty line is headers
+    const headersLine = nonEmptyLines[0];
+    const headers = parseCSVLine(headersLine).map(header => header.trim());
+
     const data = [];
 
     for (let i = 1; i < nonEmptyLines.length; i++) {
@@ -22,12 +25,14 @@ function parseCSV(csv) {
                 row[headers[j]] = currentLine[j] !== undefined ? currentLine[j] : '';
             }
             data.push(row);
+        } else {
+            console.warn(`Skipping malformed CSV row: "${nonEmptyLines[i]}" - Expected ${headers.length} columns, got ${currentLine.length}`);
         }
     }
     return data;
 }
 
-// More robust CSV line parser
+// More robust CSV line parser to handle quoted commas
 function parseCSVLine(line) {
     const result = [];
     let inQuote = false;
@@ -54,8 +59,8 @@ function formatNewspaperDateline(dateString) {
         const date = new Date(dateString);
         if (isNaN(date)) throw new Error('Invalid Date');
 
-        const options = { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-        return `${date.toLocaleString('en-US', options)}`; 
+        const options = { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
+        return `${date.toLocaleString('en-US', options)}`;
     } catch (e) {
         console.error("Date parsing error:", e);
         return 'Invalid Date';
@@ -66,20 +71,20 @@ function formatNewspaperDateline(dateString) {
 
 async function fetchNews() {
     const newsContainer = document.getElementById('news-columns');
-    if (!newsContainer) { 
+    if (!newsContainer) {
         console.error("Error: #news-columns element not found. Cannot load news.");
-        return; 
+        return;
     }
     newsContainer.innerHTML = '<p>Loading news...</p>'; // Loading message
 
     try {
         const response = await fetch(GOOGLE_SHEET_URL);
-        // FIX: Use await response.text() for browser fetch API
-        const csvText = await response.text(); 
+        const csvText = await response.text();
 
         const newsData = parseCSV(csvText);
+        // Filter out articles with empty headlines (or other critical missing data if needed)
         allNewsArticles = newsData.filter(article => article.Headline && article.Headline.trim() !== '');
-        displayNews(allNewsArticles); 
+        displayNews(allNewsArticles);
 
     } catch (error) {
         console.error('Error fetching news:', error);
@@ -89,9 +94,9 @@ async function fetchNews() {
 
 function displayNews(articlesToDisplay) {
     const newsContainer = document.getElementById('news-columns');
-    if (!newsContainer) { 
+    if (!newsContainer) {
         console.error("Error: #news-columns element not found in displayNews.");
-        return; 
+        return;
     }
     newsContainer.innerHTML = ''; // Clear loading message
 
@@ -114,6 +119,7 @@ function displayNews(articlesToDisplay) {
         let url = article.URL || '#';
         const publishedTime = article['Published Time'] || 'N/A';
         const tickers = article.Tickers || 'N/A';
+        const imageUrl = article['Image URL'] || ''; // NEW: Extract Image URL
 
         // URL Validation
         if (url !== '') {
@@ -121,11 +127,11 @@ function displayNews(articlesToDisplay) {
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
                 url = 'https://' + url;
             }
-            try { new URL(url); } catch (e) { url = '#'; } 
+            try { new URL(url); } catch (e) { url = '#'; }
         } else { url = '#'; }
 
         // Determine if BREAKING ribbon is needed (e.g., first article)
-        const isBreaking = index === 0; 
+        const isBreaking = index === 0;
         const breakingRibbonHtml = isBreaking ? '<span class="breaking-ribbon">BREAKING</span>' : '';
 
         const articleDiv = document.createElement('div');
@@ -134,10 +140,15 @@ function displayNews(articlesToDisplay) {
         const summaryHtml = summary ? `<p>${summary.substring(0, 300)}...</p>` : '<p>No summary available.</p>';
         const readMoreHtml = summary.length > 300 && url !== '#' ? `<a href="${url}" target="_blank" rel="noopener noreferrer">Read More</a>` : '';
 
+        // NEW: Image HTML
+        // Only include image if imageUrl is not empty
+        const imageHtml = imageUrl.trim() !== '' ? `<div class="article-image-container"><img src="${imageUrl}" alt="${headline}" class="article-image"></div>` : '';
+
 
         // Build the HTML for a single news article
         articleDiv.innerHTML = `
             ${breakingRibbonHtml}
+            ${imageHtml} {/* Image added here */}
             <h2><a href="${url}" target="_blank" rel="noopener noreferrer">${headline}</a></h2>
             <span class="article-dateline">${formatNewspaperDateline(publishedTime)}</span>
             ${summaryHtml}
@@ -156,7 +167,7 @@ function displayNews(articlesToDisplay) {
 function startAutoRefresh() {
     if (autoRefreshIntervalId) clearInterval(autoRefreshIntervalId);
     autoRefreshIntervalId = setInterval(fetchNews, AUTO_REFRESH_INTERVAL_MS);
-    console.log(`Auto-refresh started (every ${AUTO_REFRESH_INTERVAL_MS / 60000} minutes).`); 
+    console.log(`Auto-refresh started (every ${AUTO_REFRESH_INTERVAL_MS / 60000} minutes).`);
 }
 
 function stopAutoRefresh() { // This function is not called but remains for completeness
