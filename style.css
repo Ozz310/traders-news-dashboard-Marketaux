@@ -36,7 +36,7 @@ body {
     /* Added more prominent shadow for clear separation */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     /* Subtle gold border at the bottom of the header */
-    border-bottom: 2px solid #ffd700;
+    border-bottom: 2px solid #F0D788; /* Lighter gold */
 }
 
 .header-masthead-group { /* Wrapper for logo and title */
@@ -50,8 +50,9 @@ body {
     height: 70px; /* INCREASED SIZE FOR PROMINENCE */
     width: auto;
     border-radius: 50%;
-    border: 3px solid #ffd700; /* Slightly thicker gold border */
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), inset 0 0 10px rgba(255, 215, 0, 0.4); /* Stronger glow and inner glow */
+    /* REMOVED: Stronger gold border and intense glow */
+    border: 2px solid #F0D788; /* Subtle light gold border */
+    box-shadow: 0 0 8px rgba(240, 215, 136, 0.4); /* Softer, lighter gold glow */
     transition: transform 0.3s ease; /* Add transition for hover effect */
 }
 
@@ -62,10 +63,11 @@ body {
 .dashboard-header-section h1 {
     margin: 0;
     font-size: 2.2rem; /* Slightly increased font size for title */
-    color: #ffd700; /* Gold heading */
+    font-family: 'Merriweather', serif; /* NEW: Merriweather font */
+    color: #F0D788; /* Lighter gold */
     letter-spacing: 0.08em; /* Slightly more letter spacing */
     white-space: nowrap; /* Prevent title from wrapping */
-    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5); /* Stronger text glow */
+    text-shadow: 0 0 5px rgba(240, 215, 136, 0.5); /* Softer text glow */
 }
 
 /* Main Content Area (for news articles) - SCROLLABLE */
@@ -104,13 +106,13 @@ main::-webkit-scrollbar-thumb:hover {
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; /* Added border-color transition */
     position: relative; /* For breaking ribbon positioning */
     /* Added subtle gold bottom border */
-    border-bottom: 1px solid rgba(255, 215, 0, 0.15); /* Subtle gold line at bottom */
+    border-bottom: 1px solid rgba(240, 215, 136, 0.15); /* Subtle light gold line at bottom */
 }
 
 .news-article:hover {
     transform: translateY(-3px); /* Lift effect on hover */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.2); /* Enhanced shadow + subtle gold glow on hover */
-    border-color: #ffd700; /* Gold border on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5), 0 0 15px rgba(240, 215, 136, 0.2); /* Enhanced shadow + subtle light gold glow on hover */
+    border-color: #F0D788; /* Light gold border on hover */
 }
 
 .news-article:last-child {
@@ -127,13 +129,13 @@ main::-webkit-scrollbar-thumb:hover {
 
 .news-article h2 a {
     text-decoration: none;
-    color: #ffd700; /* Gold link for headlines */
+    color: #F0D788; /* Lighter gold link for headlines */
     transition: color 0.2s ease;
     font-weight: 700; /* Make headlines bolder */
 }
 
 .news-article h2 a:hover {
-    color: #e0b000; /* Darker gold on hover */
+    color: #DDAA33; /* Slightly darker light gold on hover */
     text-decoration: underline;
 }
 
@@ -160,38 +162,38 @@ main::-webkit-scrollbar-thumb:hover {
     flex-wrap: wrap;
     gap: 8px; /* Slightly smaller gap between tags */
     padding-top: 8px; /* Small padding top */
-    border-top: 1px solid rgba(255, 215, 0, 0.2); /* Slightly stronger gold separator */
+    border-top: 1px solid rgba(240, 215, 136, 0.2); /* Slightly stronger light gold separator */
 }
 
 .news-meta span {
     display: flex;
     align-items: center;
-    background-color: rgba(255, 215, 0, 0.08); /* Very subtle gold background for tags */
+    background-color: rgba(240, 215, 136, 0.08); /* Very subtle light gold background for tags */
     padding: 4px 10px; /* Adjusted padding for tags */
     border-radius: 15px; /* More rounded/pill-shaped tags */
-    color: #ffd700; /* Gold text for tickers */
+    color: #F0D788; /* Light gold text for tickers */
     font-weight: bold;
-    border: 1px solid rgba(255, 215, 0, 0.3); /* Subtle gold border for tags */
+    border: 1px solid rgba(240, 215, 136, 0.3); /* Subtle light gold border for tags */
 }
 
 /* Read More Link (now styled as a button) */
 .news-article a.read-more-button { /* Added class for targeting */
     display: inline-block;
     margin-top: 15px; /* More space above button */
-    color: #ffd700; /* Gold color */
+    color: #F0D788; /* Light gold color */
     text-decoration: none;
     font-weight: bold;
-    border: 1px solid #ffd700;
+    border: 1px solid #F0D788;
     padding: 8px 15px; /* More padding for button feel */
     border-radius: 5px;
     transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 2px 5px rgba(255, 215, 0, 0.1); /* Subtle glow */
+    box-shadow: 0 2px 5px rgba(240, 215, 136, 0.1); /* Subtle light gold glow */
 }
 
 .news-article a.read-more-button:hover {
-    background-color: #ffd700;
+    background-color: #F0D788; /* Light gold background on hover */
     color: #1a1a1a; /* Dark text on gold hover */
-    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4); /* Enhanced glow on hover */
+    box-shadow: 0 4px 10px rgba(240, 215, 136, 0.4); /* Enhanced glow on hover */
 }
 
 /* Breaking News Ribbon */
