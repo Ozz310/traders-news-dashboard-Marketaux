@@ -75,7 +75,7 @@ body {
 main {
     padding: 20px;
     max-height: 70vh; /* Sets the maximum height for the *visible* area */
-    overflow: hidden; /* NEW: Hides any scrollbar from 'main' itself */
+    overflow: hidden; /* Hides any scrollbar from 'main' itself */
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
@@ -83,10 +83,13 @@ main {
 #news-columns {
     height: 100%; /* Allows it to fill the height of its parent 'main' */
     overflow-y: scroll; /* Enables vertical scrolling within this container */
-    /* NEW: Hides the scrollbar by pushing it out of view */
+    /* Hides the scrollbar by pushing it out of view */
     width: calc(100% + 17px); /* Adds common scrollbar width to prevent content reflow */
     padding-right: 17px; /* Pushes content to the left, hiding the scrollbar on the right */
     box-sizing: border-box; /* Ensures padding is included in the width calculation */
+
+    /* NEW: Critical for mobile scrolling within nested elements */
+    touch-action: pan-y; /* Allows vertical scrolling gestures to be handled by this element */
 
     /* Cross-browser scrollbar hiding */
     scrollbar-width: none; /* Firefox */
