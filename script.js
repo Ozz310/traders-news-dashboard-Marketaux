@@ -1,68 +1,11 @@
 // script.js
-const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbylYi9QCz7vd8PU-9VjeRQ7h4LiAE9Y3_LX10D0faduCtwIfFLU9d1-ep48JLsGJl4L/exec'; // Your Apps Script Web App URL
+const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwqCI1JStU20JJ3-nKPrfuHsjZPQKUbyk_px22RI8eLgs4YlckZHkPniVkEkIJETySF/exec'; // Your Apps Script Web App URL (MAKE SURE THIS IS THE LATEST ONE)
 
 let allNewsArticles = []; // To store all fetched news
 let autoRefreshIntervalId; // Used for setInterval
 const AUTO_REFRESH_INTERVAL_MS = 300000; // 5 minutes
 
-// --- Helper Functions ---
-
-// Robust CSV parser (keep as is)
-function parseCSV(csv) {
-    const lines = csv.split('\n');
-    const nonEmptyLines = lines.filter(line => line.trim() !== '');
-    if (nonEmptyLines.length === 0) return [];
-
-    // Assuming the first non-empty line is headers
-    const headersLine = nonEmptyLines[0];
-    const headers = parseCSVLine(headersLine).map(header => header.trim());
-
-    const data = [];
-
-    for (let i = 1; i < nonEmptyLines.length; i++) {
-        const currentLine = parseCSVLine(nonEmptyLines[i]);
-        if (currentLine.length === headers.length) { // Ensure line has correct number of columns
-            const row = {};
-            for (let j = 0; j < headers.length; j++) {
-                row[headers[j]] = currentLine[j] !== undefined ? currentLine[j] : '';
-            }
-            data.push(row);
-        } else {
-            console.warn(`Skipping malformed CSV row: "${nonEmptyLines[i]}" - Expected ${headers.length} columns, got ${currentLine.length}`);
-        }
-    }
-    return data;
-}
-
-// REVISED: More robust CSV line parser to handle quoted commas and escaped quotes correctly
-function parseCSVLine(line) {
-    const result = [];
-    let inQuote = false;
-    let currentField = '';
-    for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-
-        if (char === '"') {
-            // Check for escaped double quote (two double quotes inside a quoted field)
-            if (inQuote && i + 1 < line.length && line[i + 1] === '"') {
-                currentField += '"'; // Add a single double quote to the field
-                i++; // Skip the next character as it's part of the escape sequence
-            } else {
-                inQuote = !inQuote; // Toggle in/out of a quoted field
-            }
-        } else if (char === ',' && !inQuote) {
-            result.push(currentField); // Push field without trimming here, trim later if needed
-            currentField = '';
-        } else {
-            currentField += char;
-        }
-    }
-    result.push(currentField); // Add the last field
-
-    // Now, apply trim to all fields after parsing the line
-    return result.map(field => field.trim());
-}
-
+// --- No more parseCSV or parseCSVLine needed! ---
 
 // Format date for display (keep this as is)
 function formatNewspaperDateline(dateString) {
@@ -79,7 +22,7 @@ function formatNewspaperDateline(dateString) {
     }
 }
 
-// --- Main Fetch & Display Functions (keep as is) ---
+// --- Main Fetch & Display Functions ---
 
 async function fetchNews() {
     const newsContainer = document.getElementById('news-columns');
@@ -97,9 +40,10 @@ async function fetchNews() {
 
     try {
         const response = await fetch(GOOGLE_SHEET_URL);
-        const csvText = await response.text();
+        // CHANGED: Expect JSON instead of text/CSV
+        const newsData = await response.json(); 
 
-        const newsData = parseCSV(csvText);
+        // Filter out articles with empty Headlines, as before
         allNewsArticles = newsData.filter(article => article.Headline && article.Headline.trim() !== '');
         displayNews(allNewsArticles);
 
