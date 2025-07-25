@@ -1,5 +1,5 @@
 // script.js
-const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbylYi9QCz7vd8PU-9VjeRQ7h4LiAE9Y3_LX10D0faduCtwIfFLU9d1-ep48JLsGJl4L/exec'; // <--- THIS IS THE NEW, CORRECT URL
+const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbylYi9QCz7vd8PU-9VjeRQ7h4LiAE9Y3_LX10D0faduCtwIfFLU9d1-ep48JLsGJl4L/exec'; // Your Apps Script Web App URL
 
 let allNewsArticles = []; // To store all fetched news
 let autoRefreshIntervalId; // Used for setInterval
@@ -7,7 +7,7 @@ const AUTO_REFRESH_INTERVAL_MS = 300000; // 5 minutes
 
 // --- Helper Functions ---
 
-// Robust CSV parser (keep this as is, it's good!)
+// Robust CSV parser (keep as is)
 function parseCSV(csv) {
     const lines = csv.split('\n');
     const nonEmptyLines = lines.filter(line => line.trim() !== '');
@@ -34,25 +34,35 @@ function parseCSV(csv) {
     return data;
 }
 
-// More robust CSV line parser to handle quoted commas (keep this as is, it's good!)
+// REVISED: More robust CSV line parser to handle quoted commas and escaped quotes correctly
 function parseCSVLine(line) {
     const result = [];
     let inQuote = false;
     let currentField = '';
     for (let i = 0; i < line.length; i++) {
         const char = line[i];
+
         if (char === '"') {
-            inQuote = !inQuote;
+            // Check for escaped double quote (two double quotes inside a quoted field)
+            if (inQuote && i + 1 < line.length && line[i + 1] === '"') {
+                currentField += '"'; // Add a single double quote to the field
+                i++; // Skip the next character as it's part of the escape sequence
+            } else {
+                inQuote = !inQuote; // Toggle in/out of a quoted field
+            }
         } else if (char === ',' && !inQuote) {
-            result.push(currentField.trim());
+            result.push(currentField); // Push field without trimming here, trim later if needed
             currentField = '';
         } else {
             currentField += char;
         }
     }
-    result.push(currentField.trim()); // Add the last field
-    return result;
+    result.push(currentField); // Add the last field
+
+    // Now, apply trim to all fields after parsing the line
+    return result.map(field => field.trim());
 }
+
 
 // Format date for display (keep this as is)
 function formatNewspaperDateline(dateString) {
